@@ -195,6 +195,15 @@ function importData(jsonFile) { /* Upload and restore data */ }
 
 ## Styling Guidelines
 
+### **Professional Design System**
+The Turkey Bowl site follows research-backed visual design principles (see `STYLING_GUIDE.md`) including:
+- **Near-colors**: Near-white (#fafafa) and near-black (#1a1a1a) instead of pure colors
+- **Mathematical spacing**: 8px-based scale for consistent rhythm
+- **Button ratios**: 2:1 horizontal:vertical padding for all interactive elements
+- **Shadow rules**: 2x blur:distance ratio for depth consistency
+- **Typography**: Minimum 16px body text for accessibility
+- **Saturated neutrals**: Warm-toned grays for sophisticated color palette
+
 ### **Retro Madden Theme (2003-2005)**
 - **Colors**: Navy blue (#1a2332), bright orange (#ff6600), metallic silver (#c0c0c0), gold (#ffd700)
 - **Effects**: Metallic gradients, drop shadows, 3D button effects
@@ -202,21 +211,38 @@ function importData(jsonFile) { /* Upload and restore data */ }
 - **Navigation**: 3D metallic buttons with hover effects
 - **Cards**: Enhanced shadows and metallic borders
 
-### **CSS Architecture**
+### **Enhanced CSS Architecture**
 ```css
-/* Base styles and variables */
+/* Professional design system variables */
 :root {
     --navy-blue: #1a2332;
     --bright-orange: #ff6600;
     --metallic-silver: #c0c0c0;
     --gold: #ffd700;
+
+    /* Near-colors for better visual polish */
+    --near-white: #fafafa;
+    --near-black: #1a1a1a;
+
+    /* Saturated neutrals with warm undertones */
+    --neutral-200: #f1f3f4;
+    --neutral-500: #6c757d;
+    --neutral-700: #495057;
+
+    /* Mathematical spacing scale (multiples of 8) */
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 16px;
+    --space-lg: 24px;
+    --space-xl: 32px;
+    --space-xxl: 48px;
 }
 
-/* Component styles */
-.nav-button { /* 3D metallic navigation */ }
-.card { /* Content cards with shadows */ }
-.admin-bar { /* Admin mode indicator */ }
-.modal { /* Admin edit modals */ }
+/* Component styles following design principles */
+.nav-button { /* 2:1 padding ratio, 2x blur:distance shadows */ }
+.card { /* Consistent spacing, near-colors */ }
+.admin-bar { /* Mathematical spacing system */ }
+.modal { /* Professional button and form styling */ }
 ```
 
 ## JavaScript Architecture
