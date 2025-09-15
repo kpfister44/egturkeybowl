@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EG Turkey Bowl 2025</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Admin Bar (hidden by default) -->
+    <div id="admin-bar" class="admin-bar hidden">
+        <div class="admin-content">
+            <span class="admin-label">Admin Mode Active</span>
+            <div class="admin-controls">
+                <button id="export-data" class="admin-btn">Export Data</button>
+                <button id="import-data" class="admin-btn">Import Data</button>
+                <button id="reset-data" class="admin-btn">Reset Data</button>
+                <button id="exit-admin" class="admin-btn">Exit Admin</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="main-nav">
+        <div class="nav-container">
+            <div class="logo">
+                <h1>EG TURKEY BOWL</h1>
+                <span class="year">2025</span>
+            </div>
+            <div class="nav-links">
+                <button class="nav-button active" data-page="home">Home</button>
+                <button class="nav-button" data-page="roster">Roster</button>
+                <button class="nav-button" data-page="teams">Teams</button>
+                <button class="nav-button" data-page="history">Hall of Fame</button>
+            </div>
+            <div class="mobile-menu-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <main class="main-content">
+        <!-- Home Section -->
+        <section id="home" class="page-section active">
+            <div class="hero">
+                <h1 class="hero-title">Turkey Bowl 2025</h1>
+                <p class="hero-subtitle">Annual Flag Football Championship</p>
+                <div class="countdown-container">
+                    <h2>Game Day Countdown</h2>
+                    <div id="countdown" class="countdown">
+                        <div class="countdown-item">
+                            <span class="countdown-number" id="days">--</span>
+                            <span class="countdown-label">Days</span>
+                        </div>
+                        <div class="countdown-item">
+                            <span class="countdown-number" id="hours">--</span>
+                            <span class="countdown-label">Hours</span>
+                        </div>
+                        <div class="countdown-item">
+                            <span class="countdown-number" id="minutes">--</span>
+                            <span class="countdown-label">Minutes</span>
+                        </div>
+                        <div class="countdown-item">
+                            <span class="countdown-number" id="seconds">--</span>
+                            <span class="countdown-label">Seconds</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="event-details">
+                    <div class="detail-card">
+                        <h3>Date & Time</h3>
+                        <p id="event-date">Loading...</p>
+                    </div>
+                    <div class="detail-card">
+                        <h3>Location</h3>
+                        <p id="event-location">Loading...</p>
+                    </div>
+                    <div class="detail-card">
+                        <h3>Registration Deadline</h3>
+                        <p id="registration-deadline">Loading...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Roster Section -->
+        <section id="roster" class="page-section">
+            <div class="section-header">
+                <h1>Player Roster</h1>
+                <button id="add-player" class="admin-only add-btn">Add Player</button>
+            </div>
+            <div id="players-grid" class="players-grid">
+                <!-- Players will be dynamically loaded here -->
+            </div>
+        </section>
+
+        <!-- Teams Section -->
+        <section id="teams" class="page-section">
+            <div class="section-header">
+                <h1>Teams</h1>
+                <button id="add-team" class="admin-only add-btn">Add Team</button>
+            </div>
+            <div id="teams-grid" class="teams-grid">
+                <!-- Teams will be dynamically loaded here -->
+            </div>
+        </section>
+
+        <!-- History/Hall of Fame Section -->
+        <section id="history" class="page-section">
+            <div class="section-header">
+                <h1>Hall of Fame</h1>
+            </div>
+
+            <div class="history-container">
+                <div class="history-section">
+                    <div class="history-header">
+                        <h2>Championships</h2>
+                        <button id="add-championship" class="admin-only add-btn">Add Championship</button>
+                    </div>
+                    <div id="championships-list" class="history-list">
+                        <!-- Championships will be dynamically loaded here -->
+                    </div>
+                </div>
+
+                <div class="history-section">
+                    <div class="history-header">
+                        <h2>Awards</h2>
+                        <button id="add-award" class="admin-only add-btn">Add Award</button>
+                    </div>
+                    <div id="awards-list" class="history-list">
+                        <!-- Awards will be dynamically loaded here -->
+                    </div>
+                </div>
+
+                <div class="history-section">
+                    <div class="history-header">
+                        <h2>Records</h2>
+                        <button id="add-record" class="admin-only add-btn">Add Record</button>
+                    </div>
+                    <div id="records-list" class="history-list">
+                        <!-- Records will be dynamically loaded here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal for Admin Forms -->
+    <div id="modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <div id="modal-body">
+                <!-- Modal content will be dynamically generated -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden file input for data import -->
+    <input type="file" id="file-input" accept=".json" style="display: none;">
+
+    <!-- Scripts -->
+    <script src="data/settings.js"></script>
+    <script src="data/players.js"></script>
+    <script src="data/teams.js"></script>
+    <script src="data/history.js"></script>
+    <script src="app.js"></script>
+    <script src="admin.js"></script>
+</body>
+</html>
