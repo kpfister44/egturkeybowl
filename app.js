@@ -78,7 +78,8 @@ function setupNavigation() {
     });
 
     // Handle browser back/forward buttons
-    window.addEventListener('hashchange', () => {
+    window.addEventListener('hashchange', (e) => {
+        e.preventDefault();
         const hash = window.location.hash.substring(1);
         if (hash && ['home', 'roster', 'teams', 'history'].includes(hash)) {
             navigateToPage(hash);
@@ -96,11 +97,18 @@ function setupNavigation() {
 function navigateToPage(page) {
     if (currentPage === page) return;
 
-    // Update navigation buttons
+    // Update navigation buttons - use inline styles to override Tailwind classes
     document.querySelectorAll('.nav-button').forEach(btn => {
-        btn.classList.remove('active');
         if (btn.dataset.page === page) {
+            // Make active - orange color and bold
+            btn.style.color = '#f26c0d';
+            btn.style.fontWeight = 'bold';
             btn.classList.add('active');
+        } else {
+            // Make inactive - white color and normal weight
+            btn.style.color = 'white';
+            btn.style.fontWeight = '500';
+            btn.classList.remove('active');
         }
     });
 
@@ -121,6 +129,17 @@ function navigateToPage(page) {
 
     // Render page content
     renderCurrentPage();
+
+    // Scroll to top of page - do this after rendering
+    setTimeout(() => {
+        window.scrollTo({
+            top: 0,
+            left: 0,
+            behavior: 'instant'
+        });
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
+    }, 10);
 
     // Close mobile menu if open
     const navLinks = document.querySelector('.nav-links');
@@ -214,16 +233,163 @@ function setupCountdown() {
 }
 
 // Render roster page
+// Pagination state
+let rosterCurrentPage = 1;
+let playersPerPage = 10;
+let filteredPlayers = [];
+
 function renderRosterPage() {
-    const playersGrid = document.getElementById('players-grid');
-    if (!playersGrid) return;
+    filteredPlayers = [...currentData.players];
+    setupSearch();
+    renderPlayersTable();
+    renderPagination();
+}
 
-    playersGrid.innerHTML = '';
+function setupSearch() {
+    const searchInput = document.getElementById('player-search');
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase().trim();
+            filterPlayers(searchTerm);
+        });
+    }
+}
 
-    currentData.players.forEach(player => {
-        const playerCard = createPlayerCard(player);
-        playersGrid.appendChild(playerCard);
+function filterPlayers(searchTerm) {
+    if (!searchTerm) {
+        filteredPlayers = [...currentData.players];
+    } else {
+        filteredPlayers = currentData.players.filter(player => {
+            return (
+                player.name.toLowerCase().includes(searchTerm) ||
+                player.position.toLowerCase().includes(searchTerm) ||
+                player.nickname.toLowerCase().includes(searchTerm)
+            );
+        });
+    }
+    rosterCurrentPage = 1; // Reset to first page when filtering
+    renderPlayersTable();
+    renderPagination();
+}
+
+function renderPlayersTable() {
+    const tbody = document.getElementById('players-table-body');
+    if (!tbody) return;
+
+    // Clear existing content
+    tbody.innerHTML = '';
+
+    // Calculate pagination
+    const startIndex = (rosterCurrentPage - 1) * playersPerPage;
+    const endIndex = startIndex + playersPerPage;
+    const playersToShow = filteredPlayers.slice(startIndex, endIndex);
+
+    playersToShow.forEach(player => {
+        const row = createPlayerTableRow(player);
+        tbody.appendChild(row);
     });
+}
+
+function createPlayerTableRow(player) {
+    const row = document.createElement('tr');
+    row.className = 'hover:bg-white/5 transition-colors';
+    row.dataset.playerId = player.id;
+
+    // Find team name
+    const playerTeam = currentData.teams.find(team => team.players.includes(player.id));
+    const teamName = playerTeam ? playerTeam.name : 'Free Agent';
+
+    row.innerHTML = `
+        <td class="table-player-cell-style">${player.name}</td>
+        <td class="table-data-cell-style">${player.position}</td>
+        <td class="table-data-cell-style">${teamName}</td>
+        <td class="table-data-cell-style">${player.yearsPlayed} year${player.yearsPlayed !== 1 ? 's' : ''}</td>
+        ${isAdminMode ? `
+        <td class="table-data-cell-style">
+            <button class="edit-player-btn admin-btn mr-2">Edit</button>
+            <button class="delete-player-btn admin-btn">Delete</button>
+        </td>
+        ` : ''}
+    `;
+
+    // Add click handler to show player details
+    row.addEventListener('click', (e) => {
+        if (!e.target.closest('.admin-btn')) {
+            showPlayerCardModal(player);
+        }
+    });
+
+    // Setup admin controls if in admin mode
+    if (isAdminMode) {
+        setupPlayerRowEditing(row, player);
+    }
+
+    return row;
+}
+
+function setupPlayerRowEditing(row, player) {
+    const editBtn = row.querySelector('.edit-player-btn');
+    const deleteBtn = row.querySelector('.delete-player-btn');
+
+    if (editBtn) {
+        editBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            showPlayerCardModal(player, true);
+        });
+    }
+
+    if (deleteBtn) {
+        deleteBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (confirm(`Delete ${player.name}?`)) {
+                deletePlayer(player.id);
+            }
+        });
+    }
+}
+
+function renderPagination() {
+    const paginationNumbers = document.getElementById('pagination-numbers');
+    if (!paginationNumbers) return;
+
+    // Clear existing pagination
+    paginationNumbers.innerHTML = '';
+
+    const totalPages = Math.ceil(filteredPlayers.length / playersPerPage);
+
+    // Don't show pagination if only one page
+    if (totalPages <= 1) {
+        const parent = paginationNumbers.parentElement;
+        parent.style.display = 'none';
+        return;
+    }
+
+    const parent = paginationNumbers.parentElement;
+    parent.style.display = 'flex';
+
+    // Generate page numbers
+    for (let i = 1; i <= totalPages; i++) {
+        const pageBtn = document.createElement('button');
+        pageBtn.className = `pagination-number ${i === rosterCurrentPage ? 'active' : ''}`;
+        pageBtn.textContent = i;
+        pageBtn.addEventListener('click', () => {
+            rosterCurrentPage = i;
+            renderPlayersTable();
+            renderPagination();
+        });
+        paginationNumbers.appendChild(pageBtn);
+    }
+}
+
+function changePage(direction) {
+    const totalPages = Math.ceil(filteredPlayers.length / playersPerPage);
+    const newPage = rosterCurrentPage + direction;
+
+    if (newPage >= 1 && newPage <= totalPages) {
+        rosterCurrentPage = newPage;
+        renderPlayersTable();
+        renderPagination();
+    }
 }
 
 // Create player card element
@@ -235,17 +401,16 @@ function createPlayerCard(player) {
     const positions = ['QB', 'RB', 'WR', 'TE', 'OL', 'DL', 'LB', 'CB', 'S', 'K'];
 
     card.innerHTML = `
-        <div class="player-photo">
+        <div class="player-photo" style="background-image: url('${player.photoPath}')">
             ${player.name.split(' ').map(n => n[0]).join('')}
         </div>
         <div class="player-name" ${isAdminMode ? 'contenteditable="true"' : ''}>${player.name}</div>
-        <div class="player-nickname" ${isAdminMode ? 'contenteditable="true"' : ''}>"${player.nickname}"</div>
         ${isAdminMode ? `
-        <select class="player-position-select" style="background: linear-gradient(145deg, var(--bright-orange), #e55500); color: white; border: none; padding: 5px 15px; border-radius: 20px; font-weight: bold; margin-bottom: 10px;">
+        <select class="player-position-select" style="background: none; border: none; color: #9ca3af; font-size: 0.875rem; margin-bottom: 8px;">
             ${positions.map(pos => `<option value="${pos}" ${pos === player.position ? 'selected' : ''}>${pos}</option>`).join('')}
         </select>
         ` : `<div class="player-position">${player.position}</div>`}
-        <div class="player-bio" ${isAdminMode ? 'contenteditable="true"' : ''}>${player.bio}</div>
+        <div class="player-experience">${player.yearsPlayed} year${player.yearsPlayed !== 1 ? 's' : ''} experience</div>
         ${isAdminMode ? '<button class="delete-player-btn admin-btn" style="margin-top: 10px;">Delete</button>' : ''}
     `;
 
@@ -253,27 +418,25 @@ function createPlayerCard(player) {
         setupPlayerCardEditing(card, player);
     }
 
+    // Add click handler to show full player info
+    card.addEventListener('click', () => {
+        if (!isAdminMode) {
+            showPlayerCardModal(player);
+        }
+    });
+
     return card;
 }
 
 // Setup player card editing for admin mode
 function setupPlayerCardEditing(card, player) {
     const nameEl = card.querySelector('.player-name');
-    const nicknameEl = card.querySelector('.player-nickname');
     const positionEl = card.querySelector('.player-position-select');
-    const bioEl = card.querySelector('.player-bio');
     const deleteBtn = card.querySelector('.delete-player-btn');
 
     if (nameEl) {
         nameEl.addEventListener('blur', () => {
             player.name = nameEl.textContent.trim();
-            savePlayerData();
-        });
-    }
-
-    if (nicknameEl) {
-        nicknameEl.addEventListener('blur', () => {
-            player.nickname = nicknameEl.textContent.trim().replace(/"/g, '');
             savePlayerData();
         });
     }
@@ -285,13 +448,6 @@ function setupPlayerCardEditing(card, player) {
         });
     }
 
-    if (bioEl) {
-        bioEl.addEventListener('blur', () => {
-            player.bio = bioEl.textContent.trim();
-            savePlayerData();
-        });
-    }
-
     if (deleteBtn) {
         deleteBtn.addEventListener('click', () => {
             if (confirm(`Delete ${player.name}?`)) {
@@ -299,6 +455,171 @@ function setupPlayerCardEditing(card, player) {
             }
         });
     }
+}
+
+// Create player list item for fantasy draft style layout
+function createPlayerListItem(player) {
+    const listItem = document.createElement('div');
+    listItem.className = 'player-list-item';
+    listItem.dataset.playerId = player.id;
+
+    listItem.innerHTML = `
+        <div class="player-list-avatar">
+            ${player.name.split(' ').map(n => n[0]).join('')}
+        </div>
+        <div class="player-list-info">
+            <div class="player-list-name">${player.name}</div>
+            <div class="player-list-nickname">"${player.nickname}"</div>
+        </div>
+        <div class="player-list-position">${player.position}</div>
+        <div class="player-list-years">${player.yearsPlayed}yr${player.yearsPlayed > 1 ? 's' : ''}</div>
+        ${isAdminMode ? `
+        <div class="player-list-admin-controls">
+            <button class="edit-player-btn admin-btn">Edit</button>
+            <button class="delete-player-btn admin-btn">Delete</button>
+        </div>
+        ` : ''}
+    `;
+
+    // Add click handler to show player card modal
+    listItem.addEventListener('click', (e) => {
+        // Don't trigger modal if clicking admin controls
+        if (e.target.closest('.player-list-admin-controls')) {
+            return;
+        }
+        showPlayerCardModal(player);
+    });
+
+    // Setup admin controls if in admin mode
+    if (isAdminMode) {
+        setupPlayerListItemEditing(listItem, player);
+    }
+
+    return listItem;
+}
+
+// Setup editing for player list item in admin mode
+function setupPlayerListItemEditing(listItem, player) {
+    const editBtn = listItem.querySelector('.edit-player-btn');
+    const deleteBtn = listItem.querySelector('.delete-player-btn');
+
+    if (editBtn) {
+        editBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            showPlayerCardModal(player, true); // true for edit mode
+        });
+    }
+
+    if (deleteBtn) {
+        deleteBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (confirm(`Delete ${player.name}?`)) {
+                deletePlayer(player.id);
+            }
+        });
+    }
+}
+
+// Show player card in modal
+function showPlayerCardModal(player, editMode = false) {
+    const modal = document.getElementById('modal');
+    const modalBody = document.getElementById('modal-body');
+
+    if (!modal || !modalBody) return;
+
+    // Create player card for modal
+    const playerCardContent = createPlayerCardForModal(player, editMode);
+    modalBody.innerHTML = '';
+    modalBody.appendChild(playerCardContent);
+
+    // Show modal
+    modal.classList.remove('hidden');
+
+    // Setup modal close handlers
+    setupModalCloseHandlers(modal);
+}
+
+// Create player card content for modal display
+function createPlayerCardForModal(player, editMode = false) {
+    const cardContainer = document.createElement('div');
+    cardContainer.className = 'player-card-modal';
+
+    const positions = ['QB', 'RB', 'WR', 'TE', 'OL', 'DL', 'LB', 'CB', 'S', 'K'];
+
+    cardContainer.innerHTML = `
+        <div class="player-photo">
+            ${player.name.split(' ').map(n => n[0]).join('')}
+        </div>
+        <div class="player-name" ${editMode ? 'contenteditable="true"' : ''}>${player.name}</div>
+        <div class="player-nickname" ${editMode ? 'contenteditable="true"' : ''}>"${player.nickname}"</div>
+        ${editMode ? `
+        <select class="player-position-select" style="background: linear-gradient(145deg, var(--bright-orange), #e55500); color: white; border: none; padding: 5px 15px; border-radius: 20px; font-weight: bold; margin-bottom: 15px;">
+            ${positions.map(pos => `<option value="${pos}" ${pos === player.position ? 'selected' : ''}>${pos}</option>`).join('')}
+        </select>
+        ` : `<div class="player-position">${player.position}</div>`}
+        <div class="player-bio" ${editMode ? 'contenteditable="true"' : ''}>${player.bio}</div>
+        <div class="player-years">${player.yearsPlayed} year${player.yearsPlayed > 1 ? 's' : ''} played</div>
+        ${editMode ? '<button class="save-player-btn admin-btn" style="margin-top: 15px;">Save Changes</button>' : ''}
+    `;
+
+    // Setup editing functionality if in edit mode
+    if (editMode) {
+        setupModalPlayerCardEditing(cardContainer, player);
+    }
+
+    return cardContainer;
+}
+
+// Setup player card editing in modal
+function setupModalPlayerCardEditing(cardContainer, player) {
+    const nameEl = cardContainer.querySelector('.player-name');
+    const nicknameEl = cardContainer.querySelector('.player-nickname');
+    const positionEl = cardContainer.querySelector('.player-position-select');
+    const bioEl = cardContainer.querySelector('.player-bio');
+    const saveBtn = cardContainer.querySelector('.save-player-btn');
+
+    if (saveBtn) {
+        saveBtn.addEventListener('click', () => {
+            // Update player data
+            if (nameEl) player.name = nameEl.textContent.trim();
+            if (nicknameEl) player.nickname = nicknameEl.textContent.trim().replace(/"/g, '');
+            if (positionEl) player.position = positionEl.value;
+            if (bioEl) player.bio = bioEl.textContent.trim();
+
+            // Save to localStorage
+            savePlayerData();
+
+            // Close modal and refresh page
+            document.getElementById('modal').classList.add('hidden');
+            renderCurrentPage();
+        });
+    }
+}
+
+// Setup modal close handlers
+function setupModalCloseHandlers(modal) {
+    const closeBtn = modal.querySelector('.modal-close');
+
+    // Close on X button click
+    if (closeBtn) {
+        closeBtn.onclick = () => modal.classList.add('hidden');
+    }
+
+    // Close on background click
+    modal.onclick = (e) => {
+        if (e.target === modal) {
+            modal.classList.add('hidden');
+        }
+    };
+
+    // Close on Escape key
+    const escapeHandler = (e) => {
+        if (e.key === 'Escape') {
+            modal.classList.add('hidden');
+            document.removeEventListener('keydown', escapeHandler);
+        }
+    };
+    document.addEventListener('keydown', escapeHandler);
 }
 
 // Save player data to localStorage
@@ -322,40 +643,77 @@ function deletePlayer(playerId) {
 
 // Render teams page
 function renderTeamsPage() {
-    const teamsGrid = document.getElementById('teams-grid');
-    if (!teamsGrid) return;
+    const teamsContainer = document.getElementById('teams-container');
+    if (!teamsContainer) return;
 
-    teamsGrid.innerHTML = '';
+    teamsContainer.innerHTML = '';
 
     currentData.teams.forEach(team => {
         const teamCard = createTeamCard(team);
-        teamsGrid.appendChild(teamCard);
+        teamsContainer.appendChild(teamCard);
     });
 }
 
 // Create team card element
 function createTeamCard(team) {
     const card = document.createElement('div');
-    card.className = 'team-card';
+    card.className = 'team-card-style group';
     card.dataset.teamId = team.id;
 
     const captain = currentData.players.find(p => p.id === team.captainId);
-    const teamPlayers = team.players.map(pid =>
-        currentData.players.find(p => p.id === pid)
-    ).filter(p => p);
+
+    // Get team initial and color based on team name
+    const teamColors = {
+        'The Turkeys': { initial: 'T', color: 'bg-orange-600' },
+        'The Gobblers': { initial: 'G', color: 'bg-amber-800' },
+        'The Pilgrims': { initial: 'P', color: 'bg-orange-600' },
+        'The Cranberries': { initial: 'C', color: 'bg-red-700' },
+        'The Stuffings': { initial: 'S', color: 'bg-yellow-600' },
+        'The Gravy Boats': { initial: 'G', color: 'bg-amber-800' }
+    };
+
+    const teamInfo = teamColors[team.name] || { initial: team.name.charAt(0), color: 'bg-gray-600' };
+
+    // Mock W/L/T records - you can make this dynamic later
+    const records = {
+        'The Turkeys': { w: 3, l: 1, t: 0 },
+        'The Gobblers': { w: 0, l: 4, t: 0 },
+        'The Pilgrims': { w: 3, l: 1, t: 0 },
+        'The Cranberries': { w: 2, l: 2, t: 0 },
+        'The Stuffings': { w: 1, l: 3, t: 0 },
+        'The Gravy Boats': { w: 0, l: 4, t: 0 }
+    };
+
+    const record = records[team.name] || { w: 0, l: 0, t: 0 };
 
     card.innerHTML = `
-        <div class="team-header">
-            <div class="team-name" ${isAdminMode ? 'contenteditable="true"' : ''}>${team.name}</div>
-            <div class="team-captain">Captain: ${captain ? captain.name : 'TBD'}</div>
+        <div class="flex items-center gap-6">
+            <div class="team-logo-style ${teamInfo.color}">${teamInfo.initial}</div>
+            <div>
+                <h3 class="team-name-style">${team.name}</h3>
+                <p class="team-captain-style">Captain: ${captain ? captain.name : 'TBD'}</p>
+            </div>
         </div>
-        <div class="team-roster">
-            ${teamPlayers.map(player =>
-                `<div class="roster-player" ${isAdminMode ? 'data-player-id="' + player.id + '"' : ''}>${player.name}${isAdminMode ? ' <span class="remove-player" style="color: #ff6600; cursor: pointer; font-weight: bold;">×</span>' : ''}</div>`
-            ).join('')}
-            ${isAdminMode ? '<button class="edit-roster-btn admin-btn" style="margin-top: 10px;">Edit Roster</button>' : ''}
+        <div class="team-stats-style">
+            <div class="stat-item-style">
+                <span class="stat-label-style">W</span>
+                <span class="stat-value-style">${record.w}</span>
+            </div>
+            <div class="stat-item-style">
+                <span class="stat-label-style">L</span>
+                <span class="stat-value-style">${record.l}</span>
+            </div>
+            <div class="stat-item-style">
+                <span class="stat-label-style">T</span>
+                <span class="stat-value-style">${record.t}</span>
+            </div>
         </div>
-        ${isAdminMode ? '<button class="delete-team-btn admin-btn" style="margin-top: 15px;">Delete Team</button>' : ''}
+        ${isAdminMode ? `
+        <div class="admin-controls" style="margin-left: 20px;">
+            <button class="edit-team-btn admin-btn mr-2">Edit</button>
+            <button class="delete-team-btn admin-btn">Delete</button>
+        </div>
+        ` : ''}
     `;
 
     if (isAdminMode) {
