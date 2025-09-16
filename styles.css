@@ -289,56 +289,63 @@ header {
     font-weight: 700;
 }
 
-/* History Section */
-.history-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 24px;
+/* Hall of Fame Section */
+.hof-divider {
+    width: 100%;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.12);
+    margin-bottom: 32px;
 }
 
-.history-section {
-    background: #2a2a2a;
-    padding: 24px;
-    border-radius: 12px;
+.hof-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
 }
 
-.history-header {
+.hof-section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.hof-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 16px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid #404040;
+    gap: 16px;
 }
 
-.history-header h2 {
+.hof-header h2 {
     color: white;
-    font-size: 1.5rem;
-    font-weight: bold;
+    font-size: 1.75rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
 }
 
-.history-item {
-    background: #1a1a1a;
-    padding: 16px;
-    border-radius: 8px;
-    margin-bottom: 12px;
-    transition: all 0.3s ease;
+.hof-table-wrapper {
+    overflow: hidden;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(26, 26, 26, 0.85);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
 }
 
-.history-item:hover {
-    background: #333333;
+.hof-table-wrapper table {
+    width: 100%;
+    border-collapse: collapse;
 }
 
-.history-item h3 {
-    color: white;
-    font-size: 1.1rem;
-    font-weight: 500;
-    margin-bottom: 4px;
+.hof-table-wrapper thead th {
+    background: rgba(255, 255, 255, 0.08);
 }
 
-.history-item p {
-    color: #9ca3af;
-    font-size: 0.875rem;
+.hof-table-wrapper tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+.hof-table-wrapper tbody tr:hover {
+    background: rgba(255, 255, 255, 0.08);
 }
 
 /* Modal */
@@ -465,6 +472,10 @@ header {
     display: block;
 }
 
+.admin-mode table .admin-only {
+    display: table-cell;
+}
+
 .text-center {
     text-align: center;
 }
@@ -494,10 +505,18 @@ header {
         gap: 16px;
     }
 
-    .teams-grid,
-    .history-container {
+    .teams-grid {
         grid-template-columns: 1fr;
         gap: 16px;
+    }
+
+    .hof-grid {
+        gap: 32px;
+    }
+
+    .hof-header {
+        flex-direction: column;
+        align-items: flex-start;
     }
 
     .admin-content {
@@ -522,6 +541,10 @@ header {
 
     .players-grid {
         grid-template-columns: 1fr;
+    }
+
+    .hof-header h2 {
+        font-size: 1.5rem;
     }
 
     .modal-content {

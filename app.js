@@ -772,143 +772,192 @@ function deleteTeam(teamId) {
     renderCurrentPage();
 }
 
+const HALL_OF_FAME_TABLES = [
+    {
+        key: 'mvp',
+        source: 'awards',
+        awardName: 'Most Valuable Player',
+        bodyId: 'hof-mvp-body',
+        columns: [
+            { field: 'year', className: 'table-data-cell-style', type: 'number' },
+            { field: 'playerName', className: 'table-player-cell-style' },
+            { field: 'teamName', className: 'table-data-cell-style', placeholder: '—' }
+        ]
+    },
+    {
+        key: 'offensive',
+        source: 'awards',
+        awardName: 'Offensive Player of the Year',
+        bodyId: 'hof-offensive-body',
+        columns: [
+            { field: 'year', className: 'table-data-cell-style', type: 'number' },
+            { field: 'playerName', className: 'table-player-cell-style' },
+            { field: 'teamName', className: 'table-data-cell-style', placeholder: '—' }
+        ]
+    },
+    {
+        key: 'defensive',
+        source: 'awards',
+        awardName: 'Defensive Player of the Year',
+        bodyId: 'hof-defensive-body',
+        columns: [
+            { field: 'year', className: 'table-data-cell-style', type: 'number' },
+            { field: 'playerName', className: 'table-player-cell-style' },
+            { field: 'teamName', className: 'table-data-cell-style', placeholder: '—' }
+        ]
+    },
+    {
+        key: 'championships',
+        source: 'championships',
+        bodyId: 'hof-championships-body',
+        columns: [
+            { field: 'year', className: 'table-data-cell-style', type: 'number' },
+            { field: 'teamName', className: 'table-player-cell-style' },
+            { field: 'score', className: 'table-data-cell-style', placeholder: '—' }
+        ]
+    }
+];
+
 // Render history page
 function renderHistoryPage() {
-    renderChampionships();
-    renderAwards();
-    renderRecords();
+    HALL_OF_FAME_TABLES.forEach(config => renderHallOfFameTable(config));
 }
 
-// Render championships
-function renderChampionships() {
-    const container = document.getElementById('championships-list');
-    if (!container) return;
+function renderHallOfFameTable(config) {
+    const tbody = document.getElementById(config.bodyId);
+    if (!tbody) return;
 
-    container.innerHTML = '';
+    tbody.innerHTML = '';
 
-    currentData.history.championships.forEach(championship => {
-        const item = document.createElement('div');
-        item.className = 'history-item';
-        item.dataset.championshipId = championship.id;
-        item.innerHTML = `
-            <h3 ${isAdminMode ? 'contenteditable="true"' : ''}>${championship.teamName}</h3>
-            <p><span class="history-year" ${isAdminMode ? 'contenteditable="true"' : ''}>${championship.year}</span> Champions</p>
-            ${championship.score ? `<p>Final Score: <span ${isAdminMode ? 'contenteditable="true"' : ''}>${championship.score}</span></p>` : ''}
-            ${isAdminMode ? '<button class="delete-history-btn admin-btn" style="margin-top: 10px;">Delete</button>' : ''}
-        `;
+    const sourceArray = currentData.history[config.source] || [];
+    const entries = sourceArray
+        .filter(entry => {
+            if (config.source === 'awards') {
+                return normalizeAwardName(entry.awardName) === config.awardName;
+            }
+            return true;
+        })
+        .sort((a, b) => (b.year || 0) - (a.year || 0));
 
-        if (isAdminMode) {
-            setupHistoryItemEditing(item, championship, 'championships');
+    if (entries.length === 0) {
+        const emptyRow = document.createElement('tr');
+        const colspan = config.columns.length + (isAdminMode ? 1 : 0);
+        emptyRow.innerHTML = `<td class="table-data-cell-style text-center" colspan="${colspan}">No entries yet.</td>`;
+        tbody.appendChild(emptyRow);
+        return;
+    }
+
+    entries.forEach(entry => {
+        const row = document.createElement('tr');
+        row.className = 'hover:bg-white/5 transition-colors';
+        row.dataset.entryId = entry.id;
+        row.dataset.entryType = config.source;
+        if (config.awardName) {
+            row.dataset.awardName = config.awardName;
         }
 
-        container.appendChild(item);
+        let rowHtml = '';
+        config.columns.forEach(column => {
+            const rawValue = entry[column.field];
+            const displayValue = rawValue === undefined || rawValue === null || rawValue === '' ? (column.placeholder || '') : rawValue;
+            const editable = isAdminMode;
+            rowHtml += `
+                <td class="${column.className}" ${editable ? 'contenteditable="true"' : ''} data-field="${column.field}" data-type="${column.type || 'text'}">${displayValue}</td>
+            `;
+        });
+
+        if (isAdminMode) {
+            rowHtml += `
+                <td class="table-data-cell-style admin-only">
+                    <button class="delete-history-btn admin-btn">Delete</button>
+                </td>
+            `;
+        }
+
+        row.innerHTML = rowHtml;
+
+        if (isAdminMode) {
+            setupHallOfFameRowEditing(row, entry, config);
+        }
+
+        tbody.appendChild(row);
     });
 }
 
-// Render awards
-function renderAwards() {
-    const container = document.getElementById('awards-list');
-    if (!container) return;
-
-    container.innerHTML = '';
-
-    currentData.history.awards.forEach(award => {
-        const item = document.createElement('div');
-        item.className = 'history-item';
-        item.dataset.awardId = award.id;
-        item.innerHTML = `
-            <h3 ${isAdminMode ? 'contenteditable="true"' : ''}>${award.awardName}</h3>
-            <p><span class="history-year" ${isAdminMode ? 'contenteditable="true"' : ''}>${award.year}</span> - <span ${isAdminMode ? 'contenteditable="true"' : ''}>${award.playerName}</span></p>
-            ${award.description ? `<p ${isAdminMode ? 'contenteditable="true"' : ''}>${award.description}</p>` : ''}
-            ${isAdminMode ? '<button class="delete-history-btn admin-btn" style="margin-top: 10px;">Delete</button>' : ''}
-        `;
-
-        if (isAdminMode) {
-            setupHistoryItemEditing(item, award, 'awards');
-        }
-
-        container.appendChild(item);
-    });
-}
-
-// Render records
-function renderRecords() {
-    const container = document.getElementById('records-list');
-    if (!container) return;
-
-    container.innerHTML = '';
-
-    currentData.history.records.forEach(record => {
-        const item = document.createElement('div');
-        item.className = 'history-item';
-        item.dataset.recordId = record.id;
-        item.innerHTML = `
-            <h3 ${isAdminMode ? 'contenteditable="true"' : ''}>${record.recordName}</h3>
-            <p><span class="history-year" ${isAdminMode ? 'contenteditable="true"' : ''}>${record.year}</span> - <span ${isAdminMode ? 'contenteditable="true"' : ''}>${record.playerName}</span></p>
-            <p><strong ${isAdminMode ? 'contenteditable="true"' : ''}>${record.recordValue}</strong></p>
-            ${isAdminMode ? '<button class="delete-history-btn admin-btn" style="margin-top: 10px;">Delete</button>' : ''}
-        `;
-
-        if (isAdminMode) {
-            setupHistoryItemEditing(item, record, 'records');
-        }
-
-        container.appendChild(item);
-    });
-}
-
-// Setup history item editing for admin mode
-function setupHistoryItemEditing(item, historyItem, type) {
-    const editableElements = item.querySelectorAll('[contenteditable="true"]');
-    const deleteBtn = item.querySelector('.delete-history-btn');
-
-    editableElements.forEach(el => {
-        el.addEventListener('blur', () => {
-            updateHistoryItem(historyItem, type, el);
+function setupHallOfFameRowEditing(row, entry, config) {
+    const editableCells = row.querySelectorAll('[data-field]');
+    editableCells.forEach(cell => {
+        const columnConfig = config.columns.find(col => col.field === cell.dataset.field) || {};
+        cell.addEventListener('blur', () => {
+            if (updateHallOfFameEntry(entry, config, cell, columnConfig)) {
+                saveToLocalStorage('history', currentData.history);
+                renderHistoryPage();
+            }
         });
     });
 
+    const deleteBtn = row.querySelector('.delete-history-btn');
     if (deleteBtn) {
         deleteBtn.addEventListener('click', () => {
-            if (confirm('Delete this item?')) {
-                deleteHistoryItem(historyItem.id, type);
+            if (confirm('Delete this entry?')) {
+                deleteHistoryItem(entry.id, config.source);
             }
         });
     }
 }
 
-// Update history item
-function updateHistoryItem(historyItem, type, element) {
-    const text = element.textContent.trim();
+function updateHallOfFameEntry(entry, config, cell, column = {}) {
+    const field = cell.dataset.field;
+    const type = cell.dataset.type || 'text';
+    const text = cell.textContent.trim();
 
-    if (element.classList.contains('history-year')) {
-        historyItem.year = parseInt(text) || historyItem.year;
-    } else if (element.tagName === 'H3') {
-        if (type === 'championships') {
-            historyItem.teamName = text;
-        } else if (type === 'awards') {
-            historyItem.awardName = text;
-        } else if (type === 'records') {
-            historyItem.recordName = text;
+    if (type === 'number') {
+        const parsed = parseInt(text, 10);
+        if (Number.isNaN(parsed)) {
+            cell.textContent = entry[field] ?? '';
+            return false;
         }
-    } else if (element.tagName === 'STRONG') {
-        historyItem.recordValue = text;
+        if (entry[field] === parsed) {
+            return false;
+        }
+        entry[field] = parsed;
     } else {
-        // Handle other fields based on context
-        if (type === 'championships' && text.includes('-')) {
-            historyItem.score = text;
-        } else if (type === 'awards') {
-            if (element.parentElement.textContent.includes(' - ')) {
-                historyItem.playerName = text;
-            } else {
-                historyItem.description = text;
-            }
-        } else if (type === 'records') {
-            historyItem.playerName = text;
+        const placeholder = column.placeholder;
+        const normalizedText = placeholder && text === placeholder ? '' : text;
+        const newValue = normalizedText === '' ? undefined : normalizedText;
+        const previousValue = entry[field] === undefined || entry[field] === null ? undefined : entry[field];
+        if (previousValue === newValue) {
+            return false;
+        }
+        if (newValue === undefined) {
+            delete entry[field];
+        } else {
+            entry[field] = newValue;
         }
     }
 
-    saveToLocalStorage('history', currentData.history);
+    if (config.source === 'awards' && config.awardName) {
+        entry.awardName = config.awardName;
+    }
+
+    return true;
+}
+
+function normalizeAwardName(name = '') {
+    const normalized = name.toLowerCase().trim();
+    switch (normalized) {
+        case 'mvp':
+        case 'most valuable player':
+            return 'Most Valuable Player';
+        case 'offensive player of the year':
+        case 'opoy':
+            return 'Offensive Player of the Year';
+        case 'defensive player of the year':
+        case 'dpoy':
+            return 'Defensive Player of the Year';
+        default:
+            return name;
+    }
 }
 
 // Delete history item

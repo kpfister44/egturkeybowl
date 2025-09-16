@@ -161,35 +161,94 @@
             <div class="section-header">
                 <h1>Hall of Fame</h1>
             </div>
+            <div class="hof-divider"></div>
 
-            <div class="history-container">
-                <div class="history-section">
-                    <div class="history-header">
+            <div class="hof-grid">
+                <div class="hof-section">
+                    <div class="hof-header">
+                        <h2>Most Valuable Player</h2>
+                        <button id="add-mvp-award" class="admin-only add-btn">Add MVP</button>
+                    </div>
+                    <div class="hof-table-wrapper">
+                        <table class="w-full">
+                            <thead class="bg-white/5">
+                                <tr>
+                                    <th class="table-cell-style w-1/5">Year</th>
+                                    <th class="table-cell-style w-2/5">Player</th>
+                                    <th class="table-cell-style w-2/5">Team</th>
+                                    <th class="table-cell-style admin-only">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="hof-mvp-body" class="divide-y divide-white/10">
+                                <!-- MVP entries -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="hof-section">
+                    <div class="hof-header">
+                        <h2>Offensive Player of the Year</h2>
+                        <button id="add-offensive-award" class="admin-only add-btn">Add Offensive Winner</button>
+                    </div>
+                    <div class="hof-table-wrapper">
+                        <table class="w-full">
+                            <thead class="bg-white/5">
+                                <tr>
+                                    <th class="table-cell-style w-1/5">Year</th>
+                                    <th class="table-cell-style w-2/5">Player</th>
+                                    <th class="table-cell-style w-2/5">Team</th>
+                                    <th class="table-cell-style admin-only">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="hof-offensive-body" class="divide-y divide-white/10">
+                                <!-- Offensive winners -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="hof-section">
+                    <div class="hof-header">
+                        <h2>Defensive Player of the Year</h2>
+                        <button id="add-defensive-award" class="admin-only add-btn">Add Defensive Winner</button>
+                    </div>
+                    <div class="hof-table-wrapper">
+                        <table class="w-full">
+                            <thead class="bg-white/5">
+                                <tr>
+                                    <th class="table-cell-style w-1/5">Year</th>
+                                    <th class="table-cell-style w-2/5">Player</th>
+                                    <th class="table-cell-style w-2/5">Team</th>
+                                    <th class="table-cell-style admin-only">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="hof-defensive-body" class="divide-y divide-white/10">
+                                <!-- Defensive winners -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="hof-section">
+                    <div class="hof-header">
                         <h2>Championships</h2>
                         <button id="add-championship" class="admin-only add-btn">Add Championship</button>
                     </div>
-                    <div id="championships-list" class="history-list">
-                        <!-- Championships will be dynamically loaded here -->
-                    </div>
-                </div>
-
-                <div class="history-section">
-                    <div class="history-header">
-                        <h2>Awards</h2>
-                        <button id="add-award" class="admin-only add-btn">Add Award</button>
-                    </div>
-                    <div id="awards-list" class="history-list">
-                        <!-- Awards will be dynamically loaded here -->
-                    </div>
-                </div>
-
-                <div class="history-section">
-                    <div class="history-header">
-                        <h2>Records</h2>
-                        <button id="add-record" class="admin-only add-btn">Add Record</button>
-                    </div>
-                    <div id="records-list" class="history-list">
-                        <!-- Records will be dynamically loaded here -->
+                    <div class="hof-table-wrapper">
+                        <table class="w-full">
+                            <thead class="bg-white/5">
+                                <tr>
+                                    <th class="table-cell-style w-1/5">Year</th>
+                                    <th class="table-cell-style w-2/5">Champion</th>
+                                    <th class="table-cell-style w-2/5">Score</th>
+                                    <th class="table-cell-style admin-only">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="hof-championships-body" class="divide-y divide-white/10">
+                                <!-- Championships -->
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>

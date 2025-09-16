@@ -24,15 +24,18 @@ function setupAdminButtons() {
         addChampionshipBtn.addEventListener('click', () => showAddChampionshipModal());
     }
 
-    const addAwardBtn = document.getElementById('add-award');
-    if (addAwardBtn) {
-        addAwardBtn.addEventListener('click', () => showAddAwardModal());
-    }
+    const hallOfFameButtons = [
+        { id: 'add-mvp-award', awardName: 'Most Valuable Player' },
+        { id: 'add-offensive-award', awardName: 'Offensive Player of the Year' },
+        { id: 'add-defensive-award', awardName: 'Defensive Player of the Year' }
+    ];
 
-    const addRecordBtn = document.getElementById('add-record');
-    if (addRecordBtn) {
-        addRecordBtn.addEventListener('click', () => showAddRecordModal());
-    }
+    hallOfFameButtons.forEach(({ id, awardName }) => {
+        const button = document.getElementById(id);
+        if (button) {
+            button.addEventListener('click', () => showAddAwardModal(awardName));
+        }
+    });
 }
 
 // Setup modal functionality
@@ -336,44 +339,62 @@ function addNewChampionship() {
 }
 
 // Show Add Award Modal
-function showAddAwardModal() {
-    const players = currentData.players.filter(p => p.currentYear);
+function showAddAwardModal(awardName) {
+    const players = currentData.players;
 
     const content = `
-        <form id="add-award-form">
+        <form id="add-award-form" data-award-name="${awardName}">
+            <input type="hidden" id="award-category" value="${awardName}">
             <div class="form-group">
                 <label for="award-year">Year:</label>
-                <input type="number" id="award-year" min="2020" max="2030" value="${currentData.settings.currentYear}" required>
-            </div>
-            <div class="form-group">
-                <label for="award-name">Award Name:</label>
-                <input type="text" id="award-name" placeholder="e.g., MVP, Most Touchdowns" required>
+                <input type="number" id="award-year" min="2000" max="2100" value="${currentData.settings.currentYear}" required>
             </div>
             <div class="form-group">
                 <label for="award-player">Player:</label>
                 <select id="award-player" required>
                     <option value="">Select Player</option>
                     ${players.map(player =>
-                        `<option value="${player.name}">${player.name}</option>`
+                        `<option value="${player.id}">${player.name}</option>`
                     ).join('')}
                 </select>
             </div>
             <div class="form-group">
-                <label for="award-description">Description (optional):</label>
-                <textarea id="award-description" rows="2" placeholder="Brief description of the achievement"></textarea>
+                <label for="award-team">Team:</label>
+                <input type="text" id="award-team" placeholder="e.g., The Gobblers">
             </div>
             <div class="form-actions">
                 <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-                <button type="submit" class="btn btn-primary">Add Award</button>
+                <button type="submit" class="btn btn-primary">Add ${awardName}</button>
             </div>
         </form>
     `;
 
-    showModal('Add Award', content);
+    showModal(`Add ${awardName}`, content);
 
-    // Setup form submission
     const form = document.getElementById('add-award-form');
     if (form) {
+        const playerSelect = document.getElementById('award-player');
+        const teamInput = document.getElementById('award-team');
+
+        if (playerSelect && teamInput) {
+            playerSelect.addEventListener('change', () => {
+                const playerId = parseInt(playerSelect.value, 10);
+                if (!playerId) {
+                    teamInput.value = '';
+                    return;
+                }
+
+                const selectedPlayer = currentData.players.find(p => p.id === playerId);
+                if (!selectedPlayer) {
+                    teamInput.value = '';
+                    return;
+                }
+
+                const playerTeam = currentData.teams.find(team => team.players.includes(playerId));
+                teamInput.value = playerTeam ? playerTeam.name : '';
+            });
+        }
+
         form.addEventListener('submit', (e) => {
             e.preventDefault();
             addNewAward();
@@ -383,25 +404,33 @@ function showAddAwardModal() {
 
 // Add new award
 function addNewAward() {
-    const year = parseInt(document.getElementById('award-year').value);
-    const awardName = document.getElementById('award-name').value.trim();
-    const playerName = document.getElementById('award-player').value;
-    const description = document.getElementById('award-description').value.trim();
+    const year = parseInt(document.getElementById('award-year').value, 10);
+    const awardName = document.getElementById('award-category').value;
+    const playerId = parseInt(document.getElementById('award-player').value, 10);
+    const teamName = document.getElementById('award-team').value.trim();
 
-    if (!year || !awardName || !playerName) {
-        alert('Year, award name, and player are required!');
+    if (!year || !awardName || !playerId) {
+        alert('Year and player are required!');
         return;
     }
+
+    const player = currentData.players.find(p => p.id === playerId);
+    if (!player) {
+        alert('Selected player could not be found.');
+        return;
+    }
+
+    const playerName = player.name;
 
     const newAward = {
         id: Math.max(...currentData.history.awards.map(a => a.id), 0) + 1,
         year: year,
         awardName: awardName,
         playerName: playerName,
-        description: description || undefined
+        teamName: teamName || undefined
     };
 
-    currentData.history.awards.unshift(newAward); // Add to beginning
+    currentData.history.awards.unshift(newAward);
     saveToLocalStorage('history', currentData.history);
 
     closeModal();
