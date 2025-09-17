@@ -35,6 +35,16 @@ body {
     transition: transform 0.3s ease;
 }
 
+body.admin-mode .layout-container {
+    padding-top: 72px; /* Offset fixed admin bar so navigation remains clickable */
+}
+
+@media (max-width: 640px) {
+    body.admin-mode .layout-container {
+        padding-top: 104px;
+    }
+}
+
 .admin-bar.hidden {
     transform: translateY(-100%);
 }

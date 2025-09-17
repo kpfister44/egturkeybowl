@@ -131,6 +131,7 @@ const eventSettings = {
 - **Teams page** supports inline edits for team name and W/L/T plus expandable roster tables that mirror the roster styling.
 - **Team management modals** use a dual-column player selector; see `setupPlayerSelectionUI` in `admin.js` for interaction logic and related styles in `styles.css` (look for `.team-player-selector`).
 - `data/teams.js` entries include a `record` object (`{ w, l, t }`) that feeds the team cards.
+- **Roster player detail** uses a single modal layout for view and edit; editable fields are wired up in `setupEditablePlayerDetail` (app.js) with supporting styles under `.player-detail-*` in `styles.css`.
 
 ## Development Guidelines
 
@@ -177,6 +178,7 @@ turkeybowl-static/
 
 ### **Data Management**
 - **Players**: Add, edit, delete players with all fields
+  - Editing reuses the roster detail modal; keep `setupEditablePlayerDetail` in sync with any UI changes to the card
 - **Teams**: Create teams, assign captains, manage rosters
   - Dual-column selector lives in `setupPlayerSelectionUI` (admin.js) with styles `.team-player-selector` / `.player-chip`; keep captain auto-inclusion logic intact if refactoring
 - **History**: Manage championships, awards, and records
