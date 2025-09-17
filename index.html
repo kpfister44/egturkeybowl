@@ -55,47 +55,89 @@
     <main class="main-content">
         <!-- Home Section -->
         <section id="home" class="page-section active">
-            <div class="hero madden-pixelated">
-                <h1 class="hero-title">Turkey Bowl 2025</h1>
-                <p class="hero-subtitle">Annual Flag Football Championship</p>
-                <div class="countdown-container">
-                    <h2>Game Day Countdown</h2>
-                    <div id="countdown" class="countdown">
-                        <div class="countdown-item">
-                            <span class="countdown-number" id="days">--</span>
-                            <span class="countdown-label">Days</span>
-                        </div>
-                        <div class="countdown-item">
-                            <span class="countdown-number" id="hours">--</span>
-                            <span class="countdown-label">Hours</span>
-                        </div>
-                        <div class="countdown-item">
-                            <span class="countdown-number" id="minutes">--</span>
-                            <span class="countdown-label">Minutes</span>
-                        </div>
-                        <div class="countdown-item">
-                            <span class="countdown-number" id="seconds">--</span>
-                            <span class="countdown-label">Seconds</span>
-                        </div>
+            <div class="home-intro">
+                <h1 id="home-title" class="home-title madden-pixelated">Turkey Bowl Championship '25</h1>
+                <p class="home-subtitle">Join us for the annual Turkey Bowl, a Thanksgiving tradition of football, friendship, and fun. This year's event promises to be the best yet, with exciting matchups, delicious food, and unforgettable memories.</p>
+            </div>
+
+            <div class="home-countdown-strip" aria-label="Countdown to kickoff">
+                <span class="countdown-strip-label">Kickoff In:</span>
+                <div class="home-countdown-values">
+                    <div class="countdown-chip">
+                        <span class="countdown-chip-value" id="days">--</span>
+                        <span class="countdown-chip-label">Days</span>
                     </div>
-                </div>
-                <div class="event-details">
-                    <div class="detail-card">
-                        <h3>Date & Time</h3>
-                        <p class="text-sm" id="event-date">Loading...</p>
+                    <div class="countdown-chip">
+                        <span class="countdown-chip-value" id="hours">--</span>
+                        <span class="countdown-chip-label">Hours</span>
                     </div>
-                    <div class="detail-card">
-                        <h3>Location</h3>
-                        <p class="text-sm" id="event-location">Loading...</p>
+                    <div class="countdown-chip">
+                        <span class="countdown-chip-value" id="minutes">--</span>
+                        <span class="countdown-chip-label">Minutes</span>
                     </div>
-                    <div class="detail-card">
-                        <h3>Registration Deadline</h3>
-                        <p class="text-sm" id="registration-deadline">Loading...</p>
+                    <div class="countdown-chip">
+                        <span class="countdown-chip-value" id="seconds">--</span>
+                        <span class="countdown-chip-label">Seconds</span>
                     </div>
                 </div>
             </div>
-        </section>
 
+            <div class="home-event-card">
+                <h2 class="home-section-title madden-pixelated-sm">Event Details</h2>
+                <div class="home-event-grid">
+                    <div class="event-detail">
+                        <span class="event-detail-label">Date</span>
+                        <span class="event-detail-value" id="event-date">Loading...</span>
+                    </div>
+                    <div class="event-detail">
+                        <span class="event-detail-label">Location</span>
+                        <span class="event-detail-value" id="event-location">Loading...</span>
+                    </div>
+                    <div class="event-detail">
+                        <span class="event-detail-label">Time</span>
+                        <span class="event-detail-value" id="event-time">Loading...</span>
+                    </div>
+                    <div class="event-detail">
+                        <span class="event-detail-label">Registration Deadline</span>
+                        <span class="event-detail-value" id="registration-deadline">Loading...</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="home-section">
+                <h2 class="home-section-title madden-pixelated-sm">Highlights</h2>
+                <div class="home-card-grid">
+                    <article class="home-card">
+                        <div class="home-card-image placeholder-football" role="presentation"><span aria-hidden="true">🏈</span></div>
+                        <div class="home-card-body">
+                            <h3 class="home-card-title">Competitive Football</h3>
+                            <p class="home-card-text">Experience the thrill of competitive football with your friends in a round-robin format.</p>
+                        </div>
+                    </article>
+                    <article class="home-card">
+                        <div class="home-card-image placeholder-feast" role="presentation"><span aria-hidden="true">🦃</span></div>
+                        <div class="home-card-body">
+                            <h3 class="home-card-title">Thanksgiving Feast</h3>
+                            <p class="home-card-text">Enjoy a delicious post-game Thanksgiving feast with great food and great company.</p>
+                        </div>
+                    </article>
+                    <article class="home-card">
+                        <div class="home-card-image placeholder-friends" role="presentation"><span aria-hidden="true">🎉</span></div>
+                        <div class="home-card-body">
+                            <h3 class="home-card-title">Friendship &amp; Fun</h3>
+                            <p class="home-card-text">More than just a game, it's about creating lasting memories and celebrating friendship.</p>
+                        </div>
+                    </article>
+                </div>
+            </div>
+
+            <div class="home-section">
+                <h2 class="home-section-title madden-pixelated-sm">Past Champions</h2>
+                <div id="past-champions" class="home-card-grid">
+                    <!-- Past champion cards will be injected here -->
+                </div>
+            </div>
+        </section>
         <!-- Roster Section -->
         <section id="roster" class="page-section">
             <div class="flex flex-wrap justify-between items-center gap-4 p-4">
