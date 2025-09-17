@@ -1,13 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect"/>
+    <link as="style" href="https://fonts.googleapis.com/css2?display=swap&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900&amp;family=Space+Grotesk%3Awght%40400%3B500%3B700" onload="this.rel='stylesheet'" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EG Turkey Bowl 2025</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦃</text></svg>">
+    <title>Turkey Bowl '23</title>
+    <link rel="icon" href="data:image/x-icon;base64," rel="icon" type="image/x-icon"/>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+<div class="relative flex h-auto min-h-screen w-full flex-col bg-[#1a1a1a] dark group/design-root overflow-x-hidden" style='font-family: "Space Grotesk", "Noto Sans", sans-serif;'>
+<div class="layout-container flex h-full grow flex-col">
     <!-- Admin Bar (hidden by default) -->
     <div id="admin-bar" class="admin-bar hidden">
         <div class="admin-content">
@@ -22,30 +28,34 @@
     </div>
 
     <!-- Navigation -->
-    <nav class="main-nav">
-        <div class="nav-container">
-            <div class="logo">
-                <h1>EG TURKEY BOWL</h1>
-            </div>
-            <div class="nav-links">
-                <button class="nav-button active" data-page="home">Home</button>
-                <button class="nav-button" data-page="roster">Roster</button>
-                <button class="nav-button" data-page="teams">Teams</button>
-                <button class="nav-button" data-page="history">Hall of Fame</button>
-            </div>
-            <div class="mobile-menu-toggle">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
+    <header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-white/20 px-10 py-4">
+        <div class="flex items-center gap-4 text-white">
+            <span class="material-symbols-outlined text-[#f26c0d] text-3xl">
+                sports_football
+            </span>
+            <h2 class="madden-pixelated text-2xl font-bold tracking-wider">Turkey Bowl '25</h2>
         </div>
-    </nav>
+        <nav class="flex items-center gap-8">
+            <button class="nav-button madden-pixelated-sm hover:text-[#f26c0d] transition-colors text-sm" data-page="home">Home</button>
+            <button class="nav-button madden-pixelated-sm hover:text-[#f26c0d] transition-colors text-sm" data-page="roster">Roster</button>
+            <button class="nav-button madden-pixelated-sm hover:text-[#f26c0d] transition-colors text-sm" data-page="history">Hall of Fame</button>
+            <button class="nav-button madden-pixelated-sm hover:text-[#f26c0d] transition-colors text-sm" data-page="teams">Team</button>
+        </nav>
+        <div class="flex items-center gap-4">
+            <button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-md h-10 bg-white/10 hover:bg-white/20 transition-colors text-white gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-3">
+                <span class="material-symbols-outlined text-xl">
+                    settings
+                </span>
+            </button>
+            <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border-2 border-[#f26c0d]" style='background-image: url("data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦃</text></svg>");'></div>
+        </div>
+    </header>
 
     <!-- Main Content Container -->
     <main class="main-content">
         <!-- Home Section -->
         <section id="home" class="page-section active">
-            <div class="hero">
+            <div class="hero madden-pixelated">
                 <h1 class="hero-title">Turkey Bowl 2025</h1>
                 <p class="hero-subtitle">Annual Flag Football Championship</p>
                 <div class="countdown-container">
@@ -72,15 +82,15 @@
                 <div class="event-details">
                     <div class="detail-card">
                         <h3>Date & Time</h3>
-                        <p id="event-date">Loading...</p>
+                        <p class="text-sm" id="event-date">Loading...</p>
                     </div>
                     <div class="detail-card">
                         <h3>Location</h3>
-                        <p id="event-location">Loading...</p>
+                        <p class="text-sm" id="event-location">Loading...</p>
                     </div>
                     <div class="detail-card">
                         <h3>Registration Deadline</h3>
-                        <p id="registration-deadline">Loading...</p>
+                        <p class="text-sm" id="registration-deadline">Loading...</p>
                     </div>
                 </div>
             </div>
@@ -88,60 +98,155 @@
 
         <!-- Roster Section -->
         <section id="roster" class="page-section">
-            <div class="section-header">
-                <h1>Player Roster</h1>
+            <div class="flex flex-wrap justify-between items-center gap-4 p-4">
+                <h1 class="madden-pixelated text-white text-4xl font-bold">Player Roster</h1>
                 <button id="add-player" class="admin-only add-btn">Add Player</button>
             </div>
-            <div id="players-grid" class="players-grid">
-                <!-- Players will be dynamically loaded here -->
+            <div class="p-4">
+                <div class="relative">
+                    <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-white/50">
+                        search
+                    </span>
+                    <input id="player-search" class="form-input w-full min-w-0 resize-none overflow-hidden rounded-md text-white focus:outline-none focus:ring-2 focus:ring-[#f26c0d] border border-white/20 bg-black/30 h-12 placeholder:text-white/50 pl-12 pr-4 text-base font-normal" placeholder="Search Players (e.g. 'QB', 'Pilgrims')" value=""/>
+                </div>
+            </div>
+            <div class="px-4 py-3">
+                <div class="overflow-hidden rounded-lg border border-white/20 bg-black/30 shadow-lg">
+                    <table class="w-full">
+                        <thead class="bg-white/5">
+                            <tr>
+                                <th class="table-cell-style w-2/5">Player</th>
+                                <th class="table-cell-style w-1/5">Position</th>
+                                <th class="table-cell-style w-1/5">Team</th>
+                                <th class="table-cell-style w-1/5">Experience</th>
+                                <th class="table-cell-style admin-only">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="players-table-body" class="divide-y divide-white/10">
+                            <!-- Players will be dynamically loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="flex items-center justify-center p-4 mt-4">
+                <button class="pagination-arrow" onclick="changePage(-1)">
+                    <span class="material-symbols-outlined">chevron_left</span>
+                </button>
+                <div id="pagination-numbers" class="flex">
+                    <!-- Pagination numbers will be dynamically generated -->
+                </div>
+                <button class="pagination-arrow" onclick="changePage(1)">
+                    <span class="material-symbols-outlined">chevron_right</span>
+                </button>
             </div>
         </section>
 
         <!-- Teams Section -->
         <section id="teams" class="page-section">
-            <div class="section-header">
-                <h1>Teams</h1>
+            <div class="flex flex-wrap justify-between items-center gap-4 p-4">
+                <h1 class="madden-pixelated text-white text-4xl font-bold">Teams</h1>
                 <button id="add-team" class="admin-only add-btn">Add Team</button>
             </div>
-            <div id="teams-grid" class="teams-grid">
-                <!-- Teams will be dynamically loaded here -->
+            <div class="px-4 py-3">
+                <div class="overflow-hidden rounded-lg border border-white/20 bg-black/30 shadow-lg">
+                    <div id="teams-container" class="divide-y divide-white/10">
+                        <!-- Teams will be dynamically loaded here -->
+                    </div>
+                </div>
             </div>
         </section>
 
         <!-- History/Hall of Fame Section -->
         <section id="history" class="page-section">
-            <div class="section-header">
-                <h1>Hall of Fame</h1>
+            <div class="flex flex-wrap justify-between items-center gap-4 p-4">
+                <h1 class="madden-pixelated text-white text-4xl font-bold">Hall of Fame</h1>
             </div>
 
-            <div class="history-container">
-                <div class="history-section">
-                    <div class="history-header">
+            <div class="hof-grid gap-4 p-4">
+                <div class="hof-section">
+                    <div class="hof-header">
                         <h2>Championships</h2>
                         <button id="add-championship" class="admin-only add-btn">Add Championship</button>
                     </div>
-                    <div id="championships-list" class="history-list">
-                        <!-- Championships will be dynamically loaded here -->
+                    <div class="hof-table-wrapper">
+                        <table class="w-full">
+                            <thead class="bg-white/5">
+                                <tr>
+                                    <th class="table-cell-style w-1/5">Year</th>
+                                    <th class="table-cell-style w-2/5">Champion</th>
+                                    <th class="table-cell-style w-2/5">Score</th>
+                                    <th class="table-cell-style admin-only">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="hof-championships-body" class="divide-y divide-white/10">
+                                <!-- Championships -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="hof-section">
+                    <div class="hof-header">
+                        <h2>Most Valuable Player</h2>
+                        <button id="add-mvp-award" class="admin-only add-btn">Add MVP</button>
+                    </div>
+                    <div class="hof-table-wrapper">
+                        <table class="w-full">
+                            <thead class="bg-white/5">
+                                <tr>
+                                    <th class="table-cell-style w-1/5">Year</th>
+                                    <th class="table-cell-style w-2/5">Player</th>
+                                    <th class="table-cell-style w-2/5">Team</th>
+                                    <th class="table-cell-style admin-only">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="hof-mvp-body" class="divide-y divide-white/10">
+                                <!-- MVP entries -->
+                            </tbody>
+                        </table>
                     </div>
                 </div>
 
-                <div class="history-section">
-                    <div class="history-header">
-                        <h2>Awards</h2>
-                        <button id="add-award" class="admin-only add-btn">Add Award</button>
+                <div class="hof-section">
+                    <div class="hof-header">
+                        <h2>Offensive Player of the Year</h2>
+                        <button id="add-offensive-award" class="admin-only add-btn">Add Offensive Winner</button>
                     </div>
-                    <div id="awards-list" class="history-list">
-                        <!-- Awards will be dynamically loaded here -->
+                    <div class="hof-table-wrapper">
+                        <table class="w-full">
+                            <thead class="bg-white/5">
+                                <tr>
+                                    <th class="table-cell-style w-1/5">Year</th>
+                                    <th class="table-cell-style w-2/5">Player</th>
+                                    <th class="table-cell-style w-2/5">Team</th>
+                                    <th class="table-cell-style admin-only">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="hof-offensive-body" class="divide-y divide-white/10">
+                                <!-- Offensive winners -->
+                            </tbody>
+                        </table>
                     </div>
                 </div>
 
-                <div class="history-section">
-                    <div class="history-header">
-                        <h2>Records</h2>
-                        <button id="add-record" class="admin-only add-btn">Add Record</button>
+                <div class="hof-section">
+                    <div class="hof-header">
+                        <h2>Defensive Player of the Year</h2>
+                        <button id="add-defensive-award" class="admin-only add-btn">Add Defensive Winner</button>
                     </div>
-                    <div id="records-list" class="history-list">
-                        <!-- Records will be dynamically loaded here -->
+                    <div class="hof-table-wrapper">
+                        <table class="w-full">
+                            <thead class="bg-white/5">
+                                <tr>
+                                    <th class="table-cell-style w-1/5">Year</th>
+                                    <th class="table-cell-style w-2/5">Player</th>
+                                    <th class="table-cell-style w-2/5">Team</th>
+                                    <th class="table-cell-style admin-only">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="hof-defensive-body" class="divide-y divide-white/10">
+                                <!-- Defensive winners -->
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -168,5 +273,7 @@
     <script src="data/history.js"></script>
     <script src="app.js"></script>
     <script src="admin.js"></script>
+</div>
+</div>
 </body>
 </html>
