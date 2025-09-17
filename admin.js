@@ -86,6 +86,13 @@ function closeModal() {
     if (modal) {
         modal.classList.add('hidden');
     }
+
+    // Remove wide class from modal content
+    const modalContent = document.querySelector('.modal-content');
+    if (modalContent) {
+        modalContent.classList.remove('wide');
+        modalContent.classList.remove('modal-player-detail');
+    }
 }
 
 // Show Add Player Modal
@@ -192,17 +199,29 @@ function showAddTeamModal() {
             </div>
             <div class="form-group">
                 <label>Team Players:</label>
-                <div id="team-players" style="max-height: 200px; overflow-y: auto; border: 1px solid var(--metallic-silver); padding: 10px; border-radius: 5px;">
-                    ${availablePlayers.map(player => `
-                        <div style="margin-bottom: 5px;">
-                            <label style="display: flex; align-items: center; gap: 8px; font-weight: normal;">
-                                <input type="checkbox" value="${player.id}" name="team-player">
-                                ${player.name} (${player.position})
-                            </label>
+                <div class="team-player-selector">
+                    <div class="player-column">
+                        <h4>Available</h4>
+                        <div class="player-list" id="available-team-players">
+                            ${availablePlayers.map(player => `
+                                <button type="button" class="player-chip" data-player-id="${player.id}">
+                                    <span class="player-name">${player.name}</span>
+                                    <span class="player-position">${player.position}</span>
+                                </button>
+                            `).join('')}
                         </div>
-                    `).join('')}
+                    </div>
+                    <div class="player-actions">
+                        <button type="button" class="btn btn-primary player-move-btn" data-action="add">Add →</button>
+                        <button type="button" class="btn btn-secondary player-move-btn" data-action="remove">← Remove</button>
+                    </div>
+                    <div class="player-column">
+                        <h4>Team Roster</h4>
+                        <div class="player-list" id="selected-team-players"></div>
+                    </div>
                 </div>
             </div>
+            <input type="hidden" id="team-player-selection">
             <div class="form-actions">
                 <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
                 <button type="submit" class="btn btn-primary">Add Team</button>
@@ -212,9 +231,23 @@ function showAddTeamModal() {
 
     showModal('Add New Team', content);
 
-    // Setup form submission
     const form = document.getElementById('add-team-form');
     if (form) {
+        setupPlayerSelectionUI({
+            availableContainerId: 'available-team-players',
+            selectedContainerId: 'selected-team-players',
+            hiddenInputId: 'team-player-selection',
+            captainSelectId: 'team-captain'
+        });
+
+        const captainSelect = document.getElementById('team-captain');
+        if (captainSelect) {
+            captainSelect.addEventListener('change', () => {
+                const selectedId = parseInt(captainSelect.value, 10);
+                ensurePlayerInSelection(selectedId, 'team-player-selection');
+            });
+        }
+
         form.addEventListener('submit', (e) => {
             e.preventDefault();
             addNewTeam();
@@ -226,8 +259,7 @@ function showAddTeamModal() {
 function addNewTeam() {
     const name = document.getElementById('team-name').value.trim();
     const captainId = parseInt(document.getElementById('team-captain').value);
-    const selectedPlayers = Array.from(document.querySelectorAll('input[name="team-player"]:checked'))
-        .map(checkbox => parseInt(checkbox.value));
+    const selectedPlayers = getSelectedPlayersFromHidden('team-player-selection');
 
     if (!name || !captainId) {
         alert('Team name and captain are required!');
@@ -250,7 +282,8 @@ function addNewTeam() {
         captainId: captainId,
         logoPath: `images/teams/${name.toLowerCase().replace(/\s+/g, '-')}-logo.png`,
         year: currentData.settings.currentYear,
-        players: selectedPlayers
+        players: selectedPlayers,
+        record: { w: 0, l: 0, t: 0 }
     };
 
     currentData.teams.push(newTeam);
@@ -540,17 +573,36 @@ function showEditRosterModal(team) {
             </div>
             <div class="form-group">
                 <label>Team Players:</label>
-                <div id="edit-team-players" style="max-height: 200px; overflow-y: auto; border: 1px solid var(--metallic-silver); padding: 10px; border-radius: 5px;">
-                    ${availablePlayers.map(player => `
-                        <div style="margin-bottom: 5px;">
-                            <label style="display: flex; align-items: center; gap: 8px; font-weight: normal;">
-                                <input type="checkbox" value="${player.id}" name="edit-team-player" ${currentPlayers.includes(player.id) ? 'checked' : ''}>
-                                ${player.name} (${player.position})
-                            </label>
+                <div class="team-player-selector">
+                    <div class="player-column">
+                        <h4>Available</h4>
+                        <div class="player-list" id="available-edit-team-players">
+                            ${availablePlayers.filter(player => !currentPlayers.includes(player.id)).map(player => `
+                                <button type="button" class="player-chip" data-player-id="${player.id}">
+                                    <span class="player-name">${player.name}</span>
+                                    <span class="player-position">${player.position}</span>
+                                </button>
+                            `).join('')}
                         </div>
-                    `).join('')}
+                    </div>
+                    <div class="player-actions">
+                        <button type="button" class="btn btn-primary player-move-btn" data-action="add">Add →</button>
+                        <button type="button" class="btn btn-secondary player-move-btn" data-action="remove">← Remove</button>
+                    </div>
+                    <div class="player-column">
+                        <h4>Team Roster</h4>
+                        <div class="player-list" id="selected-edit-team-players">
+                            ${availablePlayers.filter(player => currentPlayers.includes(player.id)).map(player => `
+                                <button type="button" class="player-chip selected" data-player-id="${player.id}">
+                                    <span class="player-name">${player.name}</span>
+                                    <span class="player-position">${player.position}</span>
+                                </button>
+                            `).join('')}
+                        </div>
+                    </div>
                 </div>
             </div>
+            <input type="hidden" id="edit-team-player-selection" value="${currentPlayers.join(',')}">
             <div class="form-actions">
                 <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
                 <button type="submit" class="btn btn-primary">Update Roster</button>
@@ -560,9 +612,31 @@ function showEditRosterModal(team) {
 
     showModal('Edit Team Roster', content);
 
-    // Setup form submission
+    // Make this modal wider
+    const modalContent = document.querySelector('.modal-content');
+    if (modalContent) {
+        modalContent.classList.add('wide');
+    }
+
     const form = document.getElementById('edit-roster-form');
     if (form) {
+        setupPlayerSelectionUI({
+            availableContainerId: 'available-edit-team-players',
+            selectedContainerId: 'selected-edit-team-players',
+            hiddenInputId: 'edit-team-player-selection',
+            captainSelectId: 'edit-team-captain'
+        });
+
+        const captainSelect = document.getElementById('edit-team-captain');
+        if (captainSelect) {
+            captainSelect.addEventListener('change', () => {
+                const selectedId = parseInt(captainSelect.value, 10);
+                ensurePlayerInSelection(selectedId, 'edit-team-player-selection');
+            });
+        }
+
+        ensurePlayerInSelection(team.captainId, 'edit-team-player-selection');
+
         form.addEventListener('submit', (e) => {
             e.preventDefault();
             updateTeamRoster(team);
@@ -573,8 +647,7 @@ function showEditRosterModal(team) {
 // Update team roster
 function updateTeamRoster(team) {
     const captainId = parseInt(document.getElementById('edit-team-captain').value);
-    const selectedPlayers = Array.from(document.querySelectorAll('input[name="edit-team-player"]:checked'))
-        .map(checkbox => parseInt(checkbox.value));
+    const selectedPlayers = getSelectedPlayersFromHidden('edit-team-player-selection');
 
     if (!captainId) {
         alert('Captain is required!');
@@ -603,6 +676,164 @@ function updateTeamRoster(team) {
     }
 
     console.log('Team roster updated:', team);
+}
+
+// Setup dual-column player selection UI
+function setupPlayerSelectionUI({ availableContainerId, selectedContainerId, hiddenInputId, captainSelectId }) {
+    const availableContainer = document.getElementById(availableContainerId);
+    const selectedContainer = document.getElementById(selectedContainerId);
+    const hiddenInput = document.getElementById(hiddenInputId);
+    if (!availableContainer || !selectedContainer || !hiddenInput) {
+        return;
+    }
+
+    const form = hiddenInput.closest('form');
+    hiddenInput.dataset.availableContainer = availableContainerId;
+    hiddenInput.dataset.selectedContainer = selectedContainerId;
+    if (captainSelectId) {
+        hiddenInput.dataset.captainSelect = captainSelectId;
+    }
+
+    function getCurrentCaptainId() {
+        if (!captainSelectId) return null;
+        const selectEl = document.getElementById(captainSelectId);
+        if (!selectEl) return null;
+        const id = parseInt(selectEl.value, 10);
+        return Number.isNaN(id) ? null : id;
+    }
+
+    function toggleChipActive(chip) {
+        chip.classList.toggle('active');
+    }
+
+    function attachChipClick(container) {
+        container.addEventListener('click', (event) => {
+            const chip = event.target.closest('.player-chip');
+            if (!chip) return;
+            event.preventDefault();
+            toggleChipActive(chip);
+        });
+
+        container.addEventListener('dblclick', (event) => {
+            const chip = event.target.closest('.player-chip');
+            if (!chip) return;
+            event.preventDefault();
+            chip.classList.add('active');
+            if (container === availableContainer) {
+                moveChips(availableContainer, selectedContainer, true);
+            } else {
+                moveChips(selectedContainer, availableContainer, false);
+                const captainId = getCurrentCaptainId();
+                if (captainId) {
+                    ensurePlayerInSelection(captainId, hiddenInputId);
+                }
+            }
+        });
+    }
+
+    function moveChips(source, target, markAsSelected) {
+        const chipsToMove = Array.from(source.querySelectorAll('.player-chip.active'));
+        if (chipsToMove.length === 0) {
+            return;
+        }
+
+        chipsToMove.forEach(chip => {
+            chip.classList.remove('active');
+            if (markAsSelected) {
+                chip.classList.add('selected');
+            } else {
+                chip.classList.remove('selected');
+            }
+            target.appendChild(chip);
+        });
+
+        updateHiddenSelectionFromContainers(hiddenInput);
+    }
+
+    attachChipClick(availableContainer);
+    attachChipClick(selectedContainer);
+
+    if (form) {
+        const moveButtons = form.querySelectorAll('.player-move-btn');
+        moveButtons.forEach(button => {
+            button.addEventListener('click', (event) => {
+                event.preventDefault();
+                const action = button.dataset.action;
+                if (action === 'add') {
+                    moveChips(availableContainer, selectedContainer, true);
+                } else if (action === 'remove') {
+                    moveChips(selectedContainer, availableContainer, false);
+                    const captainId = getCurrentCaptainId();
+                    if (captainId) {
+                        ensurePlayerInSelection(captainId, hiddenInputId);
+                    }
+                }
+            });
+        });
+    }
+
+    updateHiddenSelectionFromContainers(hiddenInput);
+
+    const initialCaptain = getCurrentCaptainId();
+    if (initialCaptain) {
+        ensurePlayerInSelection(initialCaptain, hiddenInputId);
+    }
+}
+
+// Read selected players stored in hidden inputs
+function getSelectedPlayersFromHidden(inputId) {
+    const hiddenInput = document.getElementById(inputId);
+    if (!hiddenInput) {
+        return [];
+    }
+
+    const value = hiddenInput.value.trim();
+    if (!value) {
+        return [];
+    }
+
+    return value.split(',').map(id => parseInt(id, 10)).filter(id => !Number.isNaN(id));
+}
+
+function updateHiddenSelectionFromContainers(hiddenInput) {
+    if (!hiddenInput) return;
+    const selectedContainerId = hiddenInput.dataset.selectedContainer;
+    const selectedContainer = selectedContainerId ? document.getElementById(selectedContainerId) : null;
+    if (!selectedContainer) {
+        hiddenInput.value = '';
+        return;
+    }
+
+    const ids = Array.from(selectedContainer.querySelectorAll('.player-chip')).map(chip => parseInt(chip.dataset.playerId, 10)).filter(id => !Number.isNaN(id));
+    hiddenInput.value = ids.join(',');
+}
+
+function ensurePlayerInSelection(playerId, hiddenInputId) {
+    if (!playerId) return;
+    const hiddenInput = document.getElementById(hiddenInputId);
+    if (!hiddenInput) return;
+
+    const selectedContainerId = hiddenInput.dataset.selectedContainer;
+    const availableContainerId = hiddenInput.dataset.availableContainer;
+    if (!selectedContainerId || !availableContainerId) return;
+    const selectedContainer = selectedContainerId ? document.getElementById(selectedContainerId) : null;
+    const availableContainer = availableContainerId ? document.getElementById(availableContainerId) : null;
+    if (!selectedContainer || !availableContainer) return;
+
+    const alreadySelected = Array.from(selectedContainer.querySelectorAll('.player-chip')).some(chip => parseInt(chip.dataset.playerId, 10) === playerId);
+    if (alreadySelected) {
+        return;
+    }
+
+    const chip = availableContainer.querySelector(`.player-chip[data-player-id="${playerId}"]`);
+    if (!chip) {
+        return;
+    }
+
+    chip.classList.remove('active');
+    chip.classList.add('selected');
+    selectedContainer.appendChild(chip);
+    updateHiddenSelectionFromContainers(hiddenInput);
 }
 
 // Admin utility functions

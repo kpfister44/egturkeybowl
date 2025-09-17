@@ -67,7 +67,8 @@ const teamsData = [
         captainId: 1,
         logoPath: "images/teams/turkeys-logo.png",
         year: 2025,
-        players: [1, 3, 5, 7] // Player IDs
+        players: [1, 3, 5, 7], // Player IDs
+        record: { w: 3, l: 1, t: 0 }
     },
     // ... more teams
 ];
@@ -125,6 +126,12 @@ const eventSettings = {
 4. **Responsive design**: Mobile-first with retro Madden styling
 5. **No server required**: Can be hosted on any static file server
 
+## Recent UI Enhancements
+- **Hall of Fame** now renders four roster-styled tables (MVP, Offensive POY, Defensive POY, Championships) with inline admin editing handled in `app.js`.
+- **Teams page** supports inline edits for team name and W/L/T plus expandable roster tables that mirror the roster styling.
+- **Team management modals** use a dual-column player selector; see `setupPlayerSelectionUI` in `admin.js` for interaction logic and related styles in `styles.css` (look for `.team-player-selector`).
+- `data/teams.js` entries include a `record` object (`{ w, l, t }`) that feeds the team cards.
+
 ## Development Guidelines
 
 ### **File Structure**
@@ -171,6 +178,7 @@ turkeybowl-static/
 ### **Data Management**
 - **Players**: Add, edit, delete players with all fields
 - **Teams**: Create teams, assign captains, manage rosters
+  - Dual-column selector lives in `setupPlayerSelectionUI` (admin.js) with styles `.team-player-selector` / `.player-chip`; keep captain auto-inclusion logic intact if refactoring
 - **History**: Manage championships, awards, and records
 - **Settings**: Update event details and site configuration
 

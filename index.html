@@ -158,12 +158,32 @@
 
         <!-- History/Hall of Fame Section -->
         <section id="history" class="page-section">
-            <div class="section-header">
-                <h1>Hall of Fame</h1>
+            <div class="flex flex-wrap justify-between items-center gap-4 p-4">
+                <h1 class="madden-pixelated text-white text-4xl font-bold">Hall of Fame</h1>
             </div>
-            <div class="hof-divider"></div>
 
-            <div class="hof-grid">
+            <div class="hof-grid gap-4 p-4">
+                <div class="hof-section">
+                    <div class="hof-header">
+                        <h2>Championships</h2>
+                        <button id="add-championship" class="admin-only add-btn">Add Championship</button>
+                    </div>
+                    <div class="hof-table-wrapper">
+                        <table class="w-full">
+                            <thead class="bg-white/5">
+                                <tr>
+                                    <th class="table-cell-style w-1/5">Year</th>
+                                    <th class="table-cell-style w-2/5">Champion</th>
+                                    <th class="table-cell-style w-2/5">Score</th>
+                                    <th class="table-cell-style admin-only">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="hof-championships-body" class="divide-y divide-white/10">
+                                <!-- Championships -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
                 <div class="hof-section">
                     <div class="hof-header">
                         <h2>Most Valuable Player</h2>
@@ -225,28 +245,6 @@
                             </thead>
                             <tbody id="hof-defensive-body" class="divide-y divide-white/10">
                                 <!-- Defensive winners -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div class="hof-section">
-                    <div class="hof-header">
-                        <h2>Championships</h2>
-                        <button id="add-championship" class="admin-only add-btn">Add Championship</button>
-                    </div>
-                    <div class="hof-table-wrapper">
-                        <table class="w-full">
-                            <thead class="bg-white/5">
-                                <tr>
-                                    <th class="table-cell-style w-1/5">Year</th>
-                                    <th class="table-cell-style w-2/5">Champion</th>
-                                    <th class="table-cell-style w-2/5">Score</th>
-                                    <th class="table-cell-style admin-only">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="hof-championships-body" class="divide-y divide-white/10">
-                                <!-- Championships -->
                             </tbody>
                         </table>
                     </div>

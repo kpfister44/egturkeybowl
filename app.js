@@ -532,6 +532,11 @@ function showPlayerCardModal(player, editMode = false) {
     modalBody.innerHTML = '';
     modalBody.appendChild(playerCardContent);
 
+    const modalContent = modal.querySelector('.modal-content');
+    if (modalContent) {
+        modalContent.classList.add('modal-player-detail');
+    }
+
     // Show modal
     modal.classList.remove('hidden');
 
@@ -541,56 +546,116 @@ function showPlayerCardModal(player, editMode = false) {
 
 // Create player card content for modal display
 function createPlayerCardForModal(player, editMode = false) {
-    const cardContainer = document.createElement('div');
-    cardContainer.className = 'player-card-modal';
+    const team = currentData.teams.find(t => t.players.includes(player.id));
+    const teamName = team ? team.name : 'Free Agent';
+    const hasPhoto = player.photoPath && player.photoPath.trim() !== '';
+    const photoStyle = hasPhoto ? `style="background-image: url('${player.photoPath}')"` : '';
+    const initials = player.name.split(' ').map(part => part.charAt(0)).join('').slice(0, 3).toUpperCase();
 
-    const positions = ['QB', 'RB', 'WR', 'TE', 'OL', 'DL', 'LB', 'CB', 'S', 'K'];
+    const displayName = player.name;
+
+    const bioText = player.bio && player.bio.trim().length > 0
+        ? player.bio
+        : 'No biography available for this player yet.';
+
+    const cardContainer = document.createElement('div');
+    cardContainer.className = 'player-detail-card';
 
     cardContainer.innerHTML = `
-        <div class="player-photo">
-            ${player.name.split(' ').map(n => n[0]).join('')}
+        <div class="player-detail-top">
+            <div class="player-detail-photo-wrapper">
+                <div class="player-detail-photo ${hasPhoto ? '' : 'placeholder'}" ${photoStyle}>
+                    ${hasPhoto ? '' : `<span>${initials}</span>`}
+                </div>
+            </div>
+            <div class="player-detail-summary">
+                ${editMode ? `
+                    <input class="player-detail-input player-detail-name-input" value="${displayName}" />
+                ` : `<h2 class="player-detail-name">${displayName}</h2>`}
+                ${editMode ? `
+                    <input class="player-detail-input player-detail-nickname-input" placeholder="Nickname" value="${player.nickname || ''}" />
+                ` : `<div class="player-detail-role">${player.nickname ? player.nickname : player.position}</div>`}
+                <div class="player-detail-section-title">Biography</div>
+                ${editMode ? `
+                    <textarea class="player-detail-textarea">${bioText}</textarea>
+                ` : `<p class="player-detail-bio">${bioText}</p>`}
+            </div>
         </div>
-        <div class="player-name" ${editMode ? 'contenteditable="true"' : ''}>${player.name}</div>
-        <div class="player-nickname" ${editMode ? 'contenteditable="true"' : ''}>"${player.nickname}"</div>
+        <div class="player-detail-info">
+            <div class="player-detail-info-title">Player Info</div>
+            <div class="player-detail-info-grid">
+                <div class="player-detail-info-item">
+                    <span class="info-label">Position</span>
+                    ${editMode ? `
+                        <select class="player-detail-select">
+                            ${['QB','RB','WR','TE','OL','DL','LB','CB','S','K'].map(pos => `<option value="${pos}" ${pos === player.position ? 'selected' : ''}>${pos}</option>`).join('')}
+                        </select>
+                    ` : `<span class="info-value">${player.position}</span>`}
+                </div>
+                <div class="player-detail-info-item">
+                    <span class="info-label">Experience</span>
+                    ${editMode ? `
+                        <input type="number" min="0" class="player-detail-input player-detail-years" value="${player.yearsPlayed}" />
+                    ` : `<span class="info-value">${player.yearsPlayed} year${player.yearsPlayed !== 1 ? 's' : ''}</span>`}
+                </div>
+                <div class="player-detail-info-item">
+                    <span class="info-label">Team</span>
+                    <span class="info-value">${teamName}</span>
+                </div>
+            </div>
+        </div>
         ${editMode ? `
-        <select class="player-position-select" style="background: linear-gradient(145deg, var(--bright-orange), #e55500); color: white; border: none; padding: 5px 15px; border-radius: 20px; font-weight: bold; margin-bottom: 15px;">
-            ${positions.map(pos => `<option value="${pos}" ${pos === player.position ? 'selected' : ''}>${pos}</option>`).join('')}
-        </select>
-        ` : `<div class="player-position">${player.position}</div>`}
-        <div class="player-bio" ${editMode ? 'contenteditable="true"' : ''}>${player.bio}</div>
-        <div class="player-years">${player.yearsPlayed} year${player.yearsPlayed > 1 ? 's' : ''} played</div>
-        ${editMode ? '<button class="save-player-btn admin-btn" style="margin-top: 15px;">Save Changes</button>' : ''}
+        <div class="player-detail-actions">
+            <button class="btn btn-secondary player-detail-cancel">Cancel</button>
+            <button class="btn btn-primary player-detail-save">Save Player</button>
+        </div>
+        ` : ''}
     `;
 
-    // Setup editing functionality if in edit mode
     if (editMode) {
-        setupModalPlayerCardEditing(cardContainer, player);
+        setupEditablePlayerDetail(cardContainer, player);
     }
 
     return cardContainer;
 }
 
-// Setup player card editing in modal
-function setupModalPlayerCardEditing(cardContainer, player) {
-    const nameEl = cardContainer.querySelector('.player-name');
-    const nicknameEl = cardContainer.querySelector('.player-nickname');
-    const positionEl = cardContainer.querySelector('.player-position-select');
-    const bioEl = cardContainer.querySelector('.player-bio');
-    const saveBtn = cardContainer.querySelector('.save-player-btn');
+function setupEditablePlayerDetail(container, player) {
+    const nameInput = container.querySelector('.player-detail-name-input');
+    const nicknameInput = container.querySelector('.player-detail-nickname-input');
+    const positionSelect = container.querySelector('.player-detail-select');
+    const bioTextarea = container.querySelector('.player-detail-textarea');
+    const yearsInput = container.querySelector('.player-detail-years');
+    const cancelBtn = container.querySelector('.player-detail-cancel');
+    const saveBtn = container.querySelector('.player-detail-save');
+
+    if (cancelBtn) {
+        cancelBtn.addEventListener('click', () => {
+            const modal = document.getElementById('modal');
+            resetModalLayout(modal);
+            modal.classList.add('hidden');
+        });
+    }
 
     if (saveBtn) {
         saveBtn.addEventListener('click', () => {
-            // Update player data
-            if (nameEl) player.name = nameEl.textContent.trim();
-            if (nicknameEl) player.nickname = nicknameEl.textContent.trim().replace(/"/g, '');
-            if (positionEl) player.position = positionEl.value;
-            if (bioEl) player.bio = bioEl.textContent.trim();
+            const updatedName = nameInput ? nameInput.value.trim() : player.name;
+            const updatedNickname = nicknameInput ? nicknameInput.value.trim() : player.nickname;
+            const updatedBio = bioTextarea ? bioTextarea.value.trim() : player.bio;
+            const updatedYears = yearsInput ? parseInt(yearsInput.value, 10) : player.yearsPlayed;
+            const validYears = Number.isNaN(updatedYears) ? player.yearsPlayed : Math.max(updatedYears, 0);
+            const updatedPosition = positionSelect ? positionSelect.value : player.position;
 
-            // Save to localStorage
+            player.name = updatedName.length ? updatedName : player.name;
+            player.nickname = updatedNickname;
+            player.bio = updatedBio;
+            player.yearsPlayed = validYears;
+            player.position = updatedPosition;
+
             savePlayerData();
 
-            // Close modal and refresh page
-            document.getElementById('modal').classList.add('hidden');
+            const modal = document.getElementById('modal');
+            resetModalLayout(modal);
+            modal.classList.add('hidden');
             renderCurrentPage();
         });
     }
@@ -602,12 +667,16 @@ function setupModalCloseHandlers(modal) {
 
     // Close on X button click
     if (closeBtn) {
-        closeBtn.onclick = () => modal.classList.add('hidden');
+        closeBtn.onclick = () => {
+            resetModalLayout(modal);
+            modal.classList.add('hidden');
+        };
     }
 
     // Close on background click
     modal.onclick = (e) => {
         if (e.target === modal) {
+            resetModalLayout(modal);
             modal.classList.add('hidden');
         }
     };
@@ -615,11 +684,19 @@ function setupModalCloseHandlers(modal) {
     // Close on Escape key
     const escapeHandler = (e) => {
         if (e.key === 'Escape') {
+            resetModalLayout(modal);
             modal.classList.add('hidden');
             document.removeEventListener('keydown', escapeHandler);
         }
     };
     document.addEventListener('keydown', escapeHandler);
+}
+
+function resetModalLayout(modal) {
+    const modalContent = modal.querySelector('.modal-content');
+    if (modalContent) {
+        modalContent.classList.remove('modal-player-detail');
+    }
 }
 
 // Save player data to localStorage
@@ -672,49 +749,68 @@ function createTeamCard(team) {
         'The Gravy Boats': { initial: 'G', color: 'bg-amber-800' }
     };
 
-    const teamInfo = teamColors[team.name] || { initial: team.name.charAt(0), color: 'bg-gray-600' };
+    const teamInfo = teamColors[team.name] || { initial: team.name.charAt(0).toUpperCase(), color: 'bg-gray-600' };
+    const record = team.record || { w: 0, l: 0, t: 0 };
 
-    // Mock W/L/T records - you can make this dynamic later
-    const records = {
-        'The Turkeys': { w: 3, l: 1, t: 0 },
-        'The Gobblers': { w: 0, l: 4, t: 0 },
-        'The Pilgrims': { w: 3, l: 1, t: 0 },
-        'The Cranberries': { w: 2, l: 2, t: 0 },
-        'The Stuffings': { w: 1, l: 3, t: 0 },
-        'The Gravy Boats': { w: 0, l: 4, t: 0 }
-    };
-
-    const record = records[team.name] || { w: 0, l: 0, t: 0 };
-
-    card.innerHTML = `
-        <div class="flex items-center gap-6">
+    const header = document.createElement('div');
+    header.className = 'team-card-header';
+    header.innerHTML = `
+        <div class="team-info-block">
             <div class="team-logo-style ${teamInfo.color}">${teamInfo.initial}</div>
             <div>
-                <h3 class="team-name-style">${team.name}</h3>
+                <h3 class="team-name-style" ${isAdminMode ? 'contenteditable="true" data-team-field="name"' : ''}>${team.name}</h3>
                 <p class="team-captain-style">Captain: ${captain ? captain.name : 'TBD'}</p>
             </div>
         </div>
         <div class="team-stats-style">
             <div class="stat-item-style">
                 <span class="stat-label-style">W</span>
-                <span class="stat-value-style">${record.w}</span>
+                <span class="stat-value-style" ${isAdminMode ? 'contenteditable="true" data-record-field="w"' : ''}>${record.w ?? 0}</span>
             </div>
             <div class="stat-item-style">
                 <span class="stat-label-style">L</span>
-                <span class="stat-value-style">${record.l}</span>
+                <span class="stat-value-style" ${isAdminMode ? 'contenteditable="true" data-record-field="l"' : ''}>${record.l ?? 0}</span>
             </div>
             <div class="stat-item-style">
                 <span class="stat-label-style">T</span>
-                <span class="stat-value-style">${record.t}</span>
+                <span class="stat-value-style" ${isAdminMode ? 'contenteditable="true" data-record-field="t"' : ''}>${record.t ?? 0}</span>
             </div>
         </div>
         ${isAdminMode ? `
-        <div class="admin-controls" style="margin-left: 20px;">
-            <button class="edit-team-btn admin-btn mr-2">Edit</button>
+        <div class="admin-controls" style="display: flex; gap: 8px;">
+            <button class="edit-roster-btn admin-btn">Manage Roster</button>
             <button class="delete-team-btn admin-btn">Delete</button>
         </div>
         ` : ''}
     `;
+
+    const rosterContainer = document.createElement('div');
+    rosterContainer.className = 'team-roster-container';
+
+    header.addEventListener('click', (event) => {
+        if (event.target.closest('.admin-btn') || event.target.closest('[contenteditable="true"]')) {
+            return;
+        }
+
+        card.classList.toggle('team-expanded');
+        const isActive = rosterContainer.classList.toggle('active');
+
+        if (isActive) {
+            renderTeamRosterTable(team, rosterContainer);
+        }
+    });
+
+    if (isAdminMode) {
+        const adminButtons = header.querySelectorAll('.admin-btn');
+        adminButtons.forEach(btn => {
+            btn.addEventListener('click', (event) => {
+                event.stopPropagation();
+            });
+        });
+    }
+
+    card.appendChild(header);
+    card.appendChild(rosterContainer);
 
     if (isAdminMode) {
         setupTeamCardEditing(card, team);
@@ -723,19 +819,107 @@ function createTeamCard(team) {
     return card;
 }
 
+function renderTeamRosterTable(team, container) {
+    container.innerHTML = '';
+
+    const wrapper = document.createElement('div');
+    wrapper.className = 'overflow-hidden rounded-lg border border-white/20 bg-black/30 shadow-lg';
+
+    const table = document.createElement('table');
+    table.className = 'w-full';
+    table.innerHTML = `
+        <thead class="bg-white/5">
+            <tr>
+                <th class="table-cell-style w-2/5">Player</th>
+                <th class="table-cell-style w-1/5">Position</th>
+                <th class="table-cell-style w-1/5">Team</th>
+                <th class="table-cell-style w-1/5">Experience</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-white/10"></tbody>
+    `;
+
+    const tbody = table.querySelector('tbody');
+    const players = (team.players || [])
+        .map(playerId => currentData.players.find(player => player.id === playerId))
+        .filter(Boolean);
+
+    if (players.length === 0) {
+        const emptyRow = document.createElement('tr');
+        emptyRow.innerHTML = `<td class="table-data-cell-style text-center" colspan="4">No players assigned yet.</td>`;
+        tbody.appendChild(emptyRow);
+    } else {
+        players.forEach(player => {
+            const playerTeam = currentData.teams.find(t => t.players.includes(player.id));
+            const teamName = playerTeam ? playerTeam.name : 'Free Agent';
+
+            const row = document.createElement('tr');
+            row.className = 'hover:bg-white/5 transition-colors';
+            row.innerHTML = `
+                <td class="table-player-cell-style">${player.name}</td>
+                <td class="table-data-cell-style">${player.position}</td>
+                <td class="table-data-cell-style">${teamName}</td>
+                <td class="table-data-cell-style">${player.yearsPlayed} year${player.yearsPlayed !== 1 ? 's' : ''}</td>
+            `;
+            tbody.appendChild(row);
+        });
+    }
+
+    wrapper.appendChild(table);
+    container.appendChild(wrapper);
+}
+
 // Setup team card editing for admin mode
 function setupTeamCardEditing(card, team) {
-    const nameEl = card.querySelector('.team-name');
+    const nameEl = card.querySelector('[data-team-field="name"]');
     const deleteBtn = card.querySelector('.delete-team-btn');
     const editRosterBtn = card.querySelector('.edit-roster-btn');
-    const removePlayerBtns = card.querySelectorAll('.remove-player');
+    const recordFields = card.querySelectorAll('[data-record-field]');
 
     if (nameEl) {
         nameEl.addEventListener('blur', () => {
-            team.name = nameEl.textContent.trim();
-            saveToLocalStorage('teams', currentData.teams);
+            const updatedName = nameEl.textContent.trim();
+            if (!updatedName) {
+                nameEl.textContent = team.name;
+                return;
+            }
+
+            if (updatedName !== team.name) {
+                team.name = updatedName;
+                saveToLocalStorage('teams', currentData.teams);
+                if (currentPage === 'teams') {
+                    renderTeamsPage();
+                }
+            }
         });
     }
+
+    recordFields.forEach(fieldEl => {
+        fieldEl.addEventListener('blur', () => {
+            const key = fieldEl.dataset.recordField;
+            if (!key) return;
+
+            const value = parseInt(fieldEl.textContent.trim(), 10);
+            if (Number.isNaN(value)) {
+                const currentValue = (team.record && typeof team.record[key] === 'number') ? team.record[key] : 0;
+                fieldEl.textContent = currentValue;
+                return;
+            }
+
+            if (!team.record) {
+                team.record = { w: 0, l: 0, t: 0 };
+            }
+
+            const sanitized = Math.max(0, value);
+            if (team.record[key] !== sanitized) {
+                team.record[key] = sanitized;
+                saveToLocalStorage('teams', currentData.teams);
+                if (currentPage === 'teams') {
+                    renderTeamsPage();
+                }
+            }
+        });
+    });
 
     if (deleteBtn) {
         deleteBtn.addEventListener('click', () => {
@@ -750,19 +934,6 @@ function setupTeamCardEditing(card, team) {
             showEditRosterModal(team);
         });
     }
-
-    removePlayerBtns.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const playerDiv = btn.parentElement;
-            const playerId = parseInt(playerDiv.dataset.playerId);
-            if (playerId && confirm('Remove this player from the team?')) {
-                team.players = team.players.filter(pid => pid !== playerId);
-                saveToLocalStorage('teams', currentData.teams);
-                renderCurrentPage();
-            }
-        });
-    });
 }
 
 // Delete team
