@@ -168,37 +168,103 @@ function renderCurrentPage() {
 
 // Render home page
 function renderHomePage() {
+    const homeTitle = document.getElementById('home-title');
     // Update event details
     const eventDate = document.getElementById('event-date');
     const eventLocation = document.getElementById('event-location');
     const registrationDeadline = document.getElementById('registration-deadline');
+    const eventTime = document.getElementById('event-time');
+    const championsContainer = document.getElementById('past-champions');
+
+    const eventDateValue = currentData.settings.eventDate ? new Date(currentData.settings.eventDate) : null;
+    const eventDateValid = eventDateValue && !isNaN(eventDateValue);
+
+    if (homeTitle) {
+        const settingsTitle = currentData.settings.title;
+        const yearForTitle = currentData.settings.currentYear || (eventDateValid ? eventDateValue.getFullYear() : null);
+        if (settingsTitle) {
+            homeTitle.textContent = settingsTitle;
+        } else if (yearForTitle) {
+            const shortYear = yearForTitle.toString().slice(-2);
+            homeTitle.textContent = `Turkey Bowl Championship '${shortYear}`;
+        } else {
+            homeTitle.textContent = 'Turkey Bowl Championship';
+        }
+    }
 
     if (eventDate) {
-        const date = new Date(currentData.settings.eventDate);
-        eventDate.textContent = date.toLocaleDateString('en-US', {
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: 'numeric',
-            minute: '2-digit'
-        });
+        if (eventDateValid) {
+            eventDate.textContent = eventDateValue.toLocaleDateString('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        } else {
+            eventDate.textContent = 'TBD';
+        }
+    }
+
+    if (eventTime) {
+        if (eventDateValid) {
+            eventTime.textContent = eventDateValue.toLocaleTimeString('en-US', {
+                hour: 'numeric',
+                minute: '2-digit'
+            });
+        } else {
+            eventTime.textContent = '--';
+        }
     }
 
     if (eventLocation) {
-        eventLocation.textContent = currentData.settings.eventLocation;
+        eventLocation.textContent = currentData.settings.eventLocation || 'TBD';
     }
 
     if (registrationDeadline) {
-        const deadline = new Date(currentData.settings.registrationDeadline);
-        registrationDeadline.textContent = deadline.toLocaleDateString('en-US', {
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: 'numeric',
-            minute: '2-digit'
-        });
+        const deadlineValue = currentData.settings.registrationDeadline ? new Date(currentData.settings.registrationDeadline) : null;
+        if (deadlineValue && !isNaN(deadlineValue)) {
+            registrationDeadline.textContent = deadlineValue.toLocaleDateString('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit'
+            });
+        } else {
+            registrationDeadline.textContent = 'TBD';
+        }
+    }
+
+    if (championsContainer) {
+        championsContainer.innerHTML = '';
+        const championships = (currentData.history?.championships || [])
+            .slice()
+            .sort((a, b) => (b.year || 0) - (a.year || 0))
+            .slice(0, 3);
+
+        if (championships.length === 0) {
+            const emptyMessage = document.createElement('p');
+            emptyMessage.className = 'home-card-text';
+            emptyMessage.textContent = 'Past champions will appear here once records are added.';
+            championsContainer.appendChild(emptyMessage);
+        } else {
+            championships.forEach(championship => {
+                const card = document.createElement('article');
+                card.className = 'home-card champion-card';
+                const scoreText = championship.score ? `Final Score: ${championship.score}` : 'Final score unavailable';
+
+                card.innerHTML = `
+                    <div class="home-card-image placeholder-trophy" role="presentation"><span aria-hidden="true">🏆</span></div>
+                    <div class="home-card-body">
+                        <h3 class="home-card-title">${championship.year}: ${championship.teamName}</h3>
+                        <p class="home-card-text">${scoreText}</p>
+                    </div>
+                `;
+
+                championsContainer.appendChild(card);
+            });
+        }
     }
 }
 
