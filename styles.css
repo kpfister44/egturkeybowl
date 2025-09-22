@@ -114,6 +114,16 @@ header {
     background: #1a1a1a;
 }
 
+.site-title-suffix {
+    display: inline;
+}
+
+@media (max-width: 640px) {
+    .site-title-suffix {
+        display: none;
+    }
+}
+
 a[data-nav-link] {
     text-decoration: none;
 }
