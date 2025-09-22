@@ -15,6 +15,27 @@ body {
     line-height: 1.6;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
+:root {
+    --admin-bar-offset: 0px;
+}
+
+/* Responsive navigation visibility helpers */
+.desktop-nav,
+.desktop-nav-utilities {
+    display: none;
+}
+
+@media (min-width: 768px) {
+    .desktop-nav,
+    .desktop-nav-utilities {
+        display: flex;
+    }
+}
+
 /* Container Layout */
 .layout-container {
     display: flex;
@@ -24,29 +45,20 @@ body {
 
 /* Admin Bar */
 .admin-bar {
-    position: fixed;
+    position: sticky;
     top: 0;
-    left: 0;
-    right: 0;
+    width: 100%;
     background: #f26c0d;
     color: white;
     padding: 8px 24px;
-    z-index: 1000;
+    z-index: 50;
     transition: transform 0.3s ease;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-body.admin-mode .layout-container {
-    padding-top: 72px; /* Offset fixed admin bar so navigation remains clickable */
-}
-
-@media (max-width: 640px) {
-    body.admin-mode .layout-container {
-        padding-top: 104px;
-    }
-}
-
-.admin-bar.hidden {
-    transform: translateY(-100%);
+.admin-mode .sticky-nav {
+    top: var(--admin-bar-offset, 0px);
 }
 
 .admin-content {
@@ -55,6 +67,13 @@ body.admin-mode .layout-container {
     align-items: center;
     max-width: 1200px;
     margin: 0 auto;
+}
+
+@media (max-width: 767px) {
+    .admin-content {
+        width: 100%;
+        padding: 0 16px;
+    }
 }
 
 .admin-label {
@@ -84,21 +103,19 @@ body.admin-mode .layout-container {
 }
 
 /* Header */
+.sticky-nav {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+}
+
 header {
     border-bottom: 1px solid #333333;
     background: #1a1a1a;
 }
 
-/* Navigation Buttons */
-.nav-button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-family: inherit;
-}
-
-.nav-button.active {
-    color: #f26c0d !important;
+a[data-nav-link] {
+    text-decoration: none;
 }
 
 /* Main Content */
@@ -110,13 +127,19 @@ header {
     width: 100%;
 }
 
-/* Page Sections */
-.page-section {
-    display: none;
+@media (max-width: 767px) {
+    .main-content {
+        max-width: 100%;
+        padding: 24px 16px;
+    }
 }
 
-.page-section.active {
-    display: block;
+/* Page Sections */
+.page-section {
+    padding: 48px 0;
+    opacity: 1;
+    transform: none;
+    scroll-margin-top: 96px;
 }
 
 /* Section Headers */
@@ -1174,10 +1197,6 @@ header {
         padding: 12px 20px;
     }
 
-    .home-event-card {
-        padding: 28px;
-    }
-
     .home-card-grid {
         grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     }
@@ -1192,9 +1211,6 @@ header {
         padding: 12px 16px;
     }
 
-    .home-event-card {
-        padding: 24px;
-    }
 
     .home-event-grid {
         grid-template-columns: 1fr;
