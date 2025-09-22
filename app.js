@@ -7,25 +7,14 @@ let currentData = {
 };
 
 let isAdminMode = false;
-let currentPage = 'home';
 
 // Initialize app when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
     loadData();
+    renderAllSections();
     setupNavigation();
     setupAdminMode();
     setupCountdown();
-    renderCurrentPage();
-
-    // Set up mobile menu toggle
-    const mobileToggle = document.querySelector('.mobile-menu-toggle');
-    const navLinks = document.querySelector('.nav-links');
-
-    if (mobileToggle && navLinks) {
-        mobileToggle.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
-        });
-    }
 });
 
 // Load data from JS files and localStorage
@@ -68,102 +57,113 @@ function saveToLocalStorage(dataType, data) {
 
 // Setup navigation
 function setupNavigation() {
-    const navButtons = document.querySelectorAll('.nav-button');
+    const navLinks = document.querySelectorAll('[data-nav-link]');
+    const mobileToggle = document.querySelector('[data-mobile-nav-toggle]');
+    const mobilePanel = document.querySelector('[data-mobile-nav-panel]');
+    const sections = document.querySelectorAll('.page-section');
+    const sectionIds = Array.from(sections)
+        .map(section => section.id)
+        .filter(Boolean);
 
-    navButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            const page = button.dataset.page;
-            navigateToPage(page);
+    if (!sectionIds.length) {
+        return;
+    }
+
+    const closeMobileMenu = () => {
+        if (!mobilePanel || !mobileToggle) return;
+        mobilePanel.classList.add('hidden');
+        mobileToggle.setAttribute('aria-expanded', 'false');
+        mobileToggle.setAttribute('aria-label', 'Open navigation');
+        mobileToggle.innerHTML = '<span class="material-symbols-outlined text-2xl">menu</span>';
+    };
+
+    if (mobileToggle && mobilePanel) {
+        mobileToggle.addEventListener('click', () => {
+            const expanded = mobileToggle.getAttribute('aria-expanded') === 'true';
+            const nextExpanded = !expanded;
+            mobileToggle.setAttribute('aria-expanded', nextExpanded.toString());
+            mobileToggle.setAttribute('aria-label', nextExpanded ? 'Close navigation' : 'Open navigation');
+
+            if (nextExpanded) {
+                mobilePanel.classList.remove('hidden');
+                mobileToggle.innerHTML = '<span class="material-symbols-outlined text-2xl">close</span>';
+            } else {
+                mobilePanel.classList.add('hidden');
+                mobileToggle.innerHTML = '<span class="material-symbols-outlined text-2xl">menu</span>';
+            }
+        });
+    }
+
+    navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            const targetId = link.getAttribute('href')?.replace('#', '');
+            if (targetId) {
+                updateNavigationButtons(targetId);
+            }
+            closeMobileMenu();
         });
     });
 
-    // Handle browser back/forward buttons
-    window.addEventListener('hashchange', (e) => {
-        e.preventDefault();
-        const hash = window.location.hash.substring(1);
-        if (hash && ['home', 'roster', 'teams', 'history'].includes(hash)) {
-            navigateToPage(hash);
-        }
-    });
+    if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const sectionId = entry.target.id;
+                    if (sectionIds.includes(sectionId)) {
+                        updateNavigationButtons(sectionId);
+                    }
+                }
+            });
+        }, {
+            rootMargin: '-45% 0px -45% 0px',
+            threshold: 0.2
+        });
 
-    // Set initial page from URL hash
-    const initialHash = window.location.hash.substring(1);
-    if (initialHash && ['home', 'roster', 'teams', 'history'].includes(initialHash)) {
-        currentPage = initialHash;
+        sections.forEach(section => observer.observe(section));
+    } else {
+        window.addEventListener('scroll', () => {
+            const midpoint = window.scrollY + window.innerHeight / 2;
+            let activeId = sectionIds[0];
+
+            sections.forEach(section => {
+                if (section.offsetTop <= midpoint) {
+                    activeId = section.id;
+                }
+            });
+
+            if (activeId) {
+                updateNavigationButtons(activeId);
+            }
+        }, { passive: true });
+    }
+
+    const initialHash = window.location.hash.replace('#', '');
+    const initialSection = sectionIds.includes(initialHash) ? initialHash : sectionIds[0];
+    if (initialSection) {
+        updateNavigationButtons(initialSection);
     }
 }
 
-// Navigate to a specific page
-function navigateToPage(page) {
-    if (currentPage === page) return;
-
-    // Update navigation buttons - use inline styles to override Tailwind classes
-    document.querySelectorAll('.nav-button').forEach(btn => {
-        if (btn.dataset.page === page) {
-            // Make active - orange color and bold
-            btn.style.color = '#f26c0d';
-            btn.style.fontWeight = 'bold';
-            btn.classList.add('active');
+function updateNavigationButtons(activePage) {
+    document.querySelectorAll('[data-nav-link]').forEach(link => {
+        const linkTarget = link.getAttribute('href');
+        if (linkTarget === `#${activePage}`) {
+            link.classList.add('text-[#f26c0d]', 'font-bold');
+            link.classList.remove('text-white', 'font-medium');
+            link.setAttribute('aria-current', 'page');
         } else {
-            // Make inactive - white color and normal weight
-            btn.style.color = 'white';
-            btn.style.fontWeight = '500';
-            btn.classList.remove('active');
+            link.classList.remove('text-[#f26c0d]', 'font-bold');
+            link.classList.add('text-white', 'font-medium');
+            link.removeAttribute('aria-current');
         }
     });
-
-    // Hide all sections
-    document.querySelectorAll('.page-section').forEach(section => {
-        section.classList.remove('active');
-    });
-
-    // Show target section
-    const targetSection = document.getElementById(page);
-    if (targetSection) {
-        targetSection.classList.add('active');
-    }
-
-    // Update URL hash
-    window.location.hash = page;
-    currentPage = page;
-
-    // Render page content
-    renderCurrentPage();
-
-    // Scroll to top of page - do this after rendering
-    setTimeout(() => {
-        window.scrollTo({
-            top: 0,
-            left: 0,
-            behavior: 'instant'
-        });
-        document.documentElement.scrollTop = 0;
-        document.body.scrollTop = 0;
-    }, 10);
-
-    // Close mobile menu if open
-    const navLinks = document.querySelector('.nav-links');
-    if (navLinks) {
-        navLinks.classList.remove('active');
-    }
 }
 
-// Render the current page content
-function renderCurrentPage() {
-    switch (currentPage) {
-        case 'home':
-            renderHomePage();
-            break;
-        case 'roster':
-            renderRosterPage();
-            break;
-        case 'teams':
-            renderTeamsPage();
-            break;
-        case 'history':
-            renderHistoryPage();
-            break;
-    }
+function renderAllSections() {
+    renderHomePage();
+    renderRosterPage();
+    renderTeamsPage();
+    renderHistoryPage();
 }
 
 // Render home page
@@ -305,19 +305,29 @@ let playersPerPage = 10;
 let filteredPlayers = [];
 
 function renderRosterPage() {
-    filteredPlayers = [...currentData.players];
     setupSearch();
+
+    const searchInput = document.getElementById('player-search');
+    const searchTerm = searchInput ? searchInput.value.toLowerCase().trim() : '';
+
+    if (searchTerm) {
+        filterPlayers(searchTerm);
+        return;
+    }
+
+    filteredPlayers = [...currentData.players];
     renderPlayersTable();
     renderPagination();
 }
 
 function setupSearch() {
     const searchInput = document.getElementById('player-search');
-    if (searchInput) {
+    if (searchInput && !searchInput.dataset.listenerAttached) {
         searchInput.addEventListener('input', (e) => {
             const searchTerm = e.target.value.toLowerCase().trim();
             filterPlayers(searchTerm);
         });
+        searchInput.dataset.listenerAttached = 'true';
     }
 }
 
@@ -722,7 +732,7 @@ function setupEditablePlayerDetail(container, player) {
             const modal = document.getElementById('modal');
             resetModalLayout(modal);
             modal.classList.add('hidden');
-            renderCurrentPage();
+            renderAllSections();
         });
     }
 }
@@ -781,7 +791,7 @@ function deletePlayer(playerId) {
 
     savePlayerData();
     saveToLocalStorage('teams', currentData.teams);
-    renderCurrentPage();
+    renderAllSections();
 }
 
 // Render teams page
@@ -953,9 +963,7 @@ function setupTeamCardEditing(card, team) {
             if (updatedName !== team.name) {
                 team.name = updatedName;
                 saveToLocalStorage('teams', currentData.teams);
-                if (currentPage === 'teams') {
-                    renderTeamsPage();
-                }
+                renderTeamsPage();
             }
         });
     }
@@ -980,9 +988,7 @@ function setupTeamCardEditing(card, team) {
             if (team.record[key] !== sanitized) {
                 team.record[key] = sanitized;
                 saveToLocalStorage('teams', currentData.teams);
-                if (currentPage === 'teams') {
-                    renderTeamsPage();
-                }
+                renderTeamsPage();
             }
         });
     });
@@ -1006,7 +1012,7 @@ function setupTeamCardEditing(card, team) {
 function deleteTeam(teamId) {
     currentData.teams = currentData.teams.filter(t => t.id !== teamId);
     saveToLocalStorage('teams', currentData.teams);
-    renderCurrentPage();
+    renderAllSections();
 }
 
 const HALL_OF_FAME_TABLES = [
@@ -1231,6 +1237,16 @@ function setupAdminMode() {
     document.getElementById('import-data').addEventListener('click', importData);
     document.getElementById('reset-data').addEventListener('click', resetData);
     document.getElementById('exit-admin').addEventListener('click', exitAdminMode);
+
+    window.addEventListener('resize', updateAdminBarOffset);
+}
+
+function updateAdminBarOffset() {
+    const adminBar = document.getElementById('admin-bar');
+    if (!adminBar || !document.body) return;
+
+    const offset = adminBar.classList.contains('hidden') ? 0 : adminBar.offsetHeight;
+    document.body.style.setProperty('--admin-bar-offset', `${offset}px`);
 }
 
 // Prompt for admin password
@@ -1248,7 +1264,8 @@ function enterAdminMode() {
     isAdminMode = true;
     document.body.classList.add('admin-mode');
     document.getElementById('admin-bar').classList.remove('hidden');
-    renderCurrentPage();
+    updateAdminBarOffset();
+    renderAllSections();
     console.log('Admin mode activated');
 }
 
@@ -1257,7 +1274,8 @@ function exitAdminMode() {
     isAdminMode = false;
     document.body.classList.remove('admin-mode');
     document.getElementById('admin-bar').classList.add('hidden');
-    renderCurrentPage();
+    updateAdminBarOffset();
+    renderAllSections();
     console.log('Admin mode deactivated');
 }
 
@@ -1308,7 +1326,7 @@ function importData() {
                     saveToLocalStorage('history', currentData.history);
                     saveToLocalStorage('settings', currentData.settings);
 
-                    renderCurrentPage();
+                    renderAllSections();
                     alert('Data imported successfully!');
                 }
             } catch (error) {
@@ -1329,7 +1347,7 @@ function resetData() {
         localStorage.removeItem('turkeybowl_settings');
 
         loadData();
-        renderCurrentPage();
+        renderAllSections();
         alert('Data reset to defaults!');
     }
 }

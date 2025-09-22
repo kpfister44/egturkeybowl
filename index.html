@@ -6,16 +6,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Turkey Bowl '23</title>
+    <title>Turkey Bowl 25</title>
     <link rel="icon" href="data:image/x-icon;base64," rel="icon" type="image/x-icon"/>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<div class="relative flex h-auto min-h-screen w-full flex-col bg-[#1a1a1a] dark group/design-root overflow-x-hidden" style='font-family: "Space Grotesk", "Noto Sans", sans-serif;'>
+<div class="flex h-auto min-h-screen w-full flex-col bg-[#1a1a1a] dark group/design-root" style='font-family: "Space Grotesk", "Noto Sans", sans-serif;'>
 <div class="layout-container flex h-full grow flex-col">
     <!-- Admin Bar (hidden by default) -->
-    <div id="admin-bar" class="admin-bar hidden">
+    <div id="admin-bar" class="admin-bar hidden sticky top-0 z-50">
         <div class="admin-content">
             <span class="admin-label">Admin Mode Active</span>
             <div class="admin-controls">
@@ -28,33 +28,64 @@
     </div>
 
     <!-- Navigation -->
-    <header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-white/20 px-10 py-4">
-        <div class="flex items-center gap-4 text-white">
-            <span class="material-symbols-outlined text-[#f26c0d] text-3xl">
-                sports_football
-            </span>
-            <h2 class="madden-pixelated text-2xl font-bold tracking-wider">Turkey Bowl '25</h2>
-        </div>
-        <nav class="flex items-center gap-8">
-            <button class="nav-button madden-pixelated-sm hover:text-[#f26c0d] transition-colors text-sm" data-page="home">Home</button>
-            <button class="nav-button madden-pixelated-sm hover:text-[#f26c0d] transition-colors text-sm" data-page="roster">Roster</button>
-            <button class="nav-button madden-pixelated-sm hover:text-[#f26c0d] transition-colors text-sm" data-page="history">Hall of Fame</button>
-            <button class="nav-button madden-pixelated-sm hover:text-[#f26c0d] transition-colors text-sm" data-page="teams">Team</button>
-        </nav>
-        <div class="flex items-center gap-4">
-            <button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-md h-10 bg-white/10 hover:bg-white/20 transition-colors text-white gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-3">
-                <span class="material-symbols-outlined text-xl">
-                    settings
+    <header class="sticky-nav sticky top-0 z-40 bg-[#1a1a1a] border-b border-white/20">
+        <div class="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-10 md:flex-nowrap">
+            <div class="flex flex-shrink-0 items-center gap-4 text-white">
+                <span class="material-symbols-outlined text-[#f26c0d] text-3xl">
+                    sports_football
                 </span>
-            </button>
-            <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border-2 border-[#f26c0d]" style='background-image: url("data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦃</text></svg>");'></div>
+                <h2 class="madden-pixelated text-2xl font-bold tracking-wider">Turkey Bowl 25</h2>
+            </div>
+
+            <nav class="desktop-nav flex-1 items-center justify-center gap-8" data-nav-desktop>
+                <a href="#home" data-nav-link class="madden-pixelated-sm text-sm font-medium tracking-[0.1em] text-white transition-colors duration-200 hover:text-[#f26c0d]">Home</a>
+                <a href="#roster" data-nav-link class="madden-pixelated-sm text-sm font-medium tracking-[0.1em] text-white transition-colors duration-200 hover:text-[#f26c0d]">Roster</a>
+                <a href="#history" data-nav-link class="madden-pixelated-sm text-sm font-medium tracking-[0.1em] text-white transition-colors duration-200 hover:text-[#f26c0d]">Hall of Fame</a>
+                <a href="#teams" data-nav-link class="madden-pixelated-sm text-sm font-medium tracking-[0.1em] text-white transition-colors duration-200 hover:text-[#f26c0d]">Teams</a>
+            </nav>
+
+            <div class="desktop-nav-utilities flex-shrink-0 items-center gap-4">
+                <button type="button" class="flex h-10 max-w-[480px] items-center justify-center gap-2 overflow-hidden rounded-md bg-white/10 px-3 text-sm font-bold leading-normal tracking-[0.015em] text-white transition-colors hover:bg-white/20">
+                    <span class="material-symbols-outlined text-xl">settings</span>
+                </button>
+            </div>
+
+            <div class="flex items-center gap-3 md:hidden">
+                <button type="button" class="flex h-10 items-center justify-center gap-2 overflow-hidden rounded-md bg-white/10 px-3 text-sm font-bold leading-normal tracking-[0.015em] text-white transition-colors hover:bg-white/20">
+                    <span class="material-symbols-outlined text-xl">settings</span>
+                </button>
+                <button type="button" class="inline-flex h-10 w-10 items-center justify-center rounded-md border border-white/20 text-white transition-colors duration-200 hover:border-[#f26c0d] hover:text-[#f26c0d]" aria-label="Open navigation" aria-expanded="false" data-mobile-nav-toggle>
+                    <span class="material-symbols-outlined text-2xl">menu</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="hidden border-t border-white/10 bg-[#1a1a1a] md:hidden" data-mobile-nav-panel>
+            <nav class="flex flex-col gap-2 px-4 pb-4 pt-2 sm:px-6">
+                <a href="#home" data-nav-link class="madden-pixelated-sm flex w-full items-center justify-between rounded-md px-2 py-2 text-sm font-medium tracking-[0.1em] text-white transition-colors duration-200 hover:text-[#f26c0d]">
+                    Home
+                    <span class="material-symbols-outlined text-base">arrow_forward_ios</span>
+                </a>
+                <a href="#roster" data-nav-link class="madden-pixelated-sm flex w-full items-center justify-between rounded-md px-2 py-2 text-sm font-medium tracking-[0.1em] text-white transition-colors duration-200 hover:text-[#f26c0d]">
+                    Roster
+                    <span class="material-symbols-outlined text-base">arrow_forward_ios</span>
+                </a>
+                <a href="#history" data-nav-link class="madden-pixelated-sm flex w-full items-center justify-between rounded-md px-2 py-2 text-sm font-medium tracking-[0.1em] text-white transition-colors duration-200 hover:text-[#f26c0d]">
+                    Hall of Fame
+                    <span class="material-symbols-outlined text-base">arrow_forward_ios</span>
+                </a>
+                <a href="#teams" data-nav-link class="madden-pixelated-sm flex w-full items-center justify-between rounded-md px-2 py-2 text-sm font-medium tracking-[0.1em] text-white transition-colors duration-200 hover:text-[#f26c0d]">
+                    Teams
+                    <span class="material-symbols-outlined text-base">arrow_forward_ios</span>
+                </a>
+            </nav>
         </div>
     </header>
 
     <!-- Main Content Container -->
     <main class="main-content">
         <!-- Home Section -->
-        <section id="home" class="page-section active">
+        <section id="home" class="page-section">
             <div class="home-intro">
                 <h1 id="home-title" class="home-title madden-pixelated">Turkey Bowl Championship '25</h1>
                 <p class="home-subtitle">Join us for the annual Turkey Bowl, a Thanksgiving tradition of football, friendship, and fun. This year's event promises to be the best yet, with exciting matchups, delicious food, and unforgettable memories.</p>
@@ -144,7 +175,7 @@
                 <h1 class="madden-pixelated text-white text-4xl font-bold">Player Roster</h1>
                 <button id="add-player" class="admin-only add-btn">Add Player</button>
             </div>
-            <div class="p-4">
+            <div class="py-3">
                 <div class="relative">
                     <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-white/50">
                         search
@@ -152,7 +183,7 @@
                     <input id="player-search" class="form-input w-full min-w-0 resize-none overflow-hidden rounded-md text-white focus:outline-none focus:ring-2 focus:ring-[#f26c0d] border border-white/20 bg-black/30 h-12 placeholder:text-white/50 pl-12 pr-4 text-base font-normal" placeholder="Search Players (e.g. 'QB', 'Pilgrims')" value=""/>
                 </div>
             </div>
-            <div class="px-4 py-3">
+            <div class="py-3">
                 <div class="overflow-hidden rounded-lg border border-white/20 bg-black/30 shadow-lg">
                     <table class="w-full">
                         <thead class="bg-white/5">
@@ -189,7 +220,7 @@
                 <h1 class="madden-pixelated text-white text-4xl font-bold">Teams</h1>
                 <button id="add-team" class="admin-only add-btn">Add Team</button>
             </div>
-            <div class="px-4 py-3">
+            <div class="py-3">
                 <div class="overflow-hidden rounded-lg border border-white/20 bg-black/30 shadow-lg">
                     <div id="teams-container" class="divide-y divide-white/10">
                         <!-- Teams will be dynamically loaded here -->
@@ -204,13 +235,13 @@
                 <h1 class="madden-pixelated text-white text-4xl font-bold">Hall of Fame</h1>
             </div>
 
-            <div class="hof-grid gap-4 p-4">
+            <div class="hof-grid gap-4">
                 <div class="hof-section">
                     <div class="hof-header">
                         <h2>Championships</h2>
                         <button id="add-championship" class="admin-only add-btn">Add Championship</button>
                     </div>
-                    <div class="hof-table-wrapper">
+                    <div class="hof-table-wrapper py-3">
                         <table class="w-full">
                             <thead class="bg-white/5">
                                 <tr>

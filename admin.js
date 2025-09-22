@@ -171,9 +171,7 @@ function addNewPlayer() {
 
     closeModal();
 
-    if (currentPage === 'roster') {
-        renderRosterPage();
-    }
+    renderRosterPage();
 
     console.log('Player added:', newPlayer);
 }
@@ -291,9 +289,7 @@ function addNewTeam() {
 
     closeModal();
 
-    if (currentPage === 'teams') {
-        renderTeamsPage();
-    }
+    renderTeamsPage();
 
     console.log('Team added:', newTeam);
 }
@@ -364,9 +360,7 @@ function addNewChampionship() {
 
     closeModal();
 
-    if (currentPage === 'history') {
-        renderHistoryPage();
-    }
+    renderHistoryPage();
 
     console.log('Championship added:', newChampionship);
 }
@@ -468,9 +462,7 @@ function addNewAward() {
 
     closeModal();
 
-    if (currentPage === 'history') {
-        renderHistoryPage();
-    }
+    renderHistoryPage();
 
     console.log('Award added:', newAward);
 }
@@ -546,9 +538,7 @@ function addNewRecord() {
 
     closeModal();
 
-    if (currentPage === 'history') {
-        renderHistoryPage();
-    }
+    renderHistoryPage();
 
     console.log('Record added:', newRecord);
 }
@@ -671,9 +661,7 @@ function updateTeamRoster(team) {
 
     closeModal();
 
-    if (currentPage === 'teams') {
-        renderTeamsPage();
-    }
+    renderTeamsPage();
 
     console.log('Team roster updated:', team);
 }
