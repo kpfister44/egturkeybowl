@@ -102,6 +102,10 @@ html {
     transform: translateY(-1px);
 }
 
+.admin-btn-spacer {
+    margin-right: 8px;
+}
+
 /* Header */
 .sticky-nav {
     position: sticky;
@@ -152,22 +156,6 @@ a[data-nav-link] {
     scroll-margin-top: 96px;
 }
 
-/* Section Headers */
-.section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 32px;
-}
-
-.section-header h1 {
-    color: white;
-    font-size: 3rem;
-    font-weight: bold;
-    line-height: 1.2;
-    letter-spacing: -0.015em;
-}
-
 /* Add Button */
 .add-btn {
     background: #f26c0d;
@@ -203,7 +191,6 @@ a[data-nav-link] {
     padding: 1rem;
     text-align: left;
     color: white;
-    font-size: 0.875rem;
     font-weight: 500;
     letter-spacing: 0.05em;
     text-transform: uppercase;
@@ -213,13 +200,150 @@ a[data-nav-link] {
     padding: 1rem;
     color: white;
     font-weight: 700;
-    font-size: 1rem;
 }
 
 .table-data-cell-style {
     padding: 1rem;
     color: #A0A0A0;
+}
+
+/* Roster Section */
+.roster-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 0 24px;
+    margin-bottom: 24px;
+}
+
+.roster-title {
+    color: white;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+}
+
+.roster-search {
+    padding: 0 24px;
+    margin-bottom: 24px;
+}
+
+.roster-search-field {
+    position: relative;
+}
+
+.roster-search-icon {
+    position: absolute;
+    top: 50%;
+    left: 16px;
+    transform: translateY(-50%);
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 1.5rem;
+    pointer-events: none;
+}
+
+.roster-search-input {
+    width: 100%;
+    min-width: 0;
+    height: 52px;
+    padding: 0 20px 0 52px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(0, 0, 0, 0.35);
+    color: white;
     font-size: 1rem;
+    font-weight: 500;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    outline: none;
+}
+
+.roster-search-input::placeholder {
+    color: rgba(255, 255, 255, 0.55);
+    font-weight: 400;
+}
+
+.roster-search-input:focus {
+    border-color: #f26c0d;
+    box-shadow: 0 0 0 3px rgba(242, 108, 13, 0.25);
+}
+
+.roster-table-container {
+    padding: 12px 24px;
+}
+
+.roster-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.roster-table-body tr + tr {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.roster-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 16px 0;
+    margin-top: 24px;
+}
+
+.roster-pagination-numbers {
+    display: flex;
+    gap: 8px;
+}
+
+.roster-col-player {
+    width: 35%;
+}
+
+.roster-col-position {
+    width: 20%;
+}
+
+.roster-col-team {
+    width: 30%;
+}
+
+.roster-col-experience {
+    width: 15%;
+}
+
+@media (max-width: 768px) {
+    .roster-header {
+        padding: 0 16px;
+    }
+
+    .roster-search {
+        padding: 0 16px;
+    }
+
+    .roster-table-container {
+        padding: 12px 16px;
+    }
+
+    .roster-pagination {
+        padding: 16px;
+        gap: 12px;
+    }
+}
+
+@media (max-width: 600px) {
+
+    .roster-col-player {
+         width: 40%;
+    }
+    .roster-col-position {
+         width: 10%;
+    }
+    .roster-col-team {
+         width: 35%;
+    }
+    .roster-col-experience {
+        width: 15%;
+    }
 }
 
 /* Pagination Styles */
@@ -268,6 +392,53 @@ a[data-nav-link] {
     font-weight: 700;
 }
 
+/* Teams Section */
+.teams-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px;
+}
+
+.teams-title,
+.history-title {
+    color: white;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+}
+
+.teams-wrapper {
+    padding: 12px 0;
+}
+
+.teams-card-list {
+    overflow: hidden;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(0, 0, 0, 0.3);
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.45);
+}
+
+.teams-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.teams-container > .team-card-style + .team-card-style {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.history-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px;
+}
+
 /* Team Card Styles */
 .team-card-style {
     display: flex;
@@ -305,8 +476,56 @@ a[data-nav-link] {
     display: block;
 }
 
-.team-roster-container.active .overflow-hidden {
+.team-roster-container.active .team-roster-table-wrapper {
     margin-top: 0.5rem;
+}
+
+.team-roster-table-wrapper {
+    overflow: hidden;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(0, 0, 0, 0.3);
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.45);
+}
+
+.team-roster-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.team-roster-table thead th {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.team-roster-table tbody tr + tr {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.table-row-interactive {
+    transition: background-color 0.2s ease;
+}
+
+.table-row-interactive:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.team-roster-col-player {
+    width: 40%;
+}
+
+.team-roster-col-position,
+.team-roster-col-team,
+.team-roster-col-experience {
+    width: 20%;
+}
+
+.hof-col-year {
+    width: 20%;
+}
+
+.hof-col-primary,
+.hof-col-secondary {
+    width: 40%;
 }
 
 /* Team player selector (admin modal) */
@@ -490,19 +709,16 @@ a[data-nav-link] {
     border: 1px solid rgba(255,255,255,0.12);
     background: rgba(0,0,0,0.45);
     color: white;
-    font-size: 1rem;
     font-weight: 600;
     letter-spacing: 0.01em;
 }
 
 .player-detail-input.player-detail-name-input {
-    font-size: 2.2rem;
     font-weight: 800;
     text-transform: none;
 }
 
 .player-detail-input.player-detail-nickname-input {
-    font-size: 1rem;
     letter-spacing: 0.08em;
     text-transform: uppercase;
 }
@@ -528,7 +744,6 @@ a[data-nav-link] {
     background: rgba(15, 15, 15, 0.85) !important;
     color: rgba(255,255,255,0.9) !important;
     font-weight: 600;
-    font-size: 0.95rem;
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: textfield;
@@ -547,28 +762,18 @@ a[data-nav-link] {
 }
 
 .player-detail-name {
-    font-size: 2.4rem;
     font-weight: 800;
     letter-spacing: 0.01em;
 }
 
 .player-detail-role {
-    font-size: 1rem;
     font-weight: 600;
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: #f26c0d;
 }
 
-.player-detail-role-sub {
-    font-size: 0.85rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.6);
-}
-
 .player-detail-section-title {
-    font-size: 0.85rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: rgba(255,255,255,0.72);
@@ -577,7 +782,6 @@ a[data-nav-link] {
 .player-detail-bio {
     color: rgba(255,255,255,0.75);
     line-height: 1.6;
-    font-size: 0.95rem;
 }
 
 .player-detail-info {
@@ -591,7 +795,6 @@ a[data-nav-link] {
 }
 
 .player-detail-info-title {
-    font-size: 1rem;
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -611,14 +814,12 @@ a[data-nav-link] {
 
 .info-label {
     color: rgba(255,255,255,0.6);
-    font-size: 0.8rem;
     letter-spacing: 0.08em;
     text-transform: uppercase;
 }
 
 .info-value {
     color: white;
-    font-size: 1.05rem;
     font-weight: 600;
 }
 .team-logo-style {
@@ -634,16 +835,42 @@ a[data-nav-link] {
     border: 2px solid white;
 }
 
+.team-logo-color-turkey {
+    background: #ea580c;
+}
+
+.team-logo-color-gobbler {
+    background: #92400e;
+}
+
+.team-logo-color-gravy {
+    background: #92400e;
+}
+
+.team-logo-color-pilgrim {
+    background: #ea580c;
+}
+
+.team-logo-color-cranberry {
+    background: #b91c1c;
+}
+
+.team-logo-color-stuffing {
+    background: #d97706;
+}
+
+.team-logo-color-default {
+    background: #4b5563;
+}
+
 .team-name-style {
     color: white;
-    font-size: 1.5rem;
     font-weight: 700;
     letter-spacing: 0.05em;
 }
 
 .team-captain-style {
     color: #A0A0A0;
-    font-size: 1rem;
 }
 
 .team-stats-style {
@@ -660,29 +887,20 @@ a[data-nav-link] {
 
 .stat-label-style {
     color: #A0A0A0;
-    font-size: 0.875rem;
     font-weight: 500;
     text-transform: uppercase;
 }
 
 .stat-value-style {
     color: white;
-    font-size: 1.5rem;
     font-weight: 700;
 }
 
 /* Hall of Fame Section */
-.hof-divider {
-    width: 100%;
-    height: 1px;
-    background: rgba(255, 255, 255, 0.12);
-    margin-bottom: 32px;
-}
-
 .hof-grid {
     display: flex;
     flex-direction: column;
-    gap: 48px;
+    gap: 16px;
 }
 
 .hof-section {
@@ -696,36 +914,46 @@ a[data-nav-link] {
     justify-content: space-between;
     align-items: center;
     gap: 16px;
+    padding-left: 16px;
 }
 
 .hof-header h2 {
     color: white;
-    font-size: 1.75rem;
     font-weight: 700;
     letter-spacing: 0.01em;
 }
 
+.roster-table-wrapper,
 .hof-table-wrapper {
     overflow: hidden;
     border-radius: 16px;
     border: 1px solid rgba(255, 255, 255, 0.12);
     background: rgba(26, 26, 26, 0.85);
     box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+    padding: 12px 0;
 }
 
+.roster-table-wrapper table,
 .hof-table-wrapper table {
     width: 100%;
     border-collapse: collapse;
 }
 
+.roster-table-wrapper thead th,
 .hof-table-wrapper thead th {
     background: rgba(255, 255, 255, 0.08);
 }
 
+.hof-table-wrapper tbody tr + tr {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.roster-table-wrapper tbody tr,
 .hof-table-wrapper tbody tr {
     transition: background-color 0.2s ease;
 }
 
+.roster-table-wrapper tbody tr:hover,
 .hof-table-wrapper tbody tr:hover {
     background: rgba(255, 255, 255, 0.08);
 }
@@ -877,26 +1105,6 @@ a[data-nav-link] {
         padding: 12px 20px;
     }
 
-    .section-header {
-        flex-direction: column;
-        gap: 16px;
-        align-items: flex-start;
-    }
-
-    .section-header h1 {
-        font-size: 2rem;
-    }
-
-    .players-grid {
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 16px;
-    }
-
-    .teams-grid {
-        grid-template-columns: 1fr;
-        gap: 16px;
-    }
-
     .hof-grid {
         gap: 32px;
     }
@@ -960,18 +1168,6 @@ a[data-nav-link] {
         padding: 16px;
     }
 
-    .section-header h1 {
-        font-size: 1.5rem;
-    }
-
-    .players-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .hof-header h2 {
-        font-size: 1.5rem;
-    }
-
     .modal-content {
         padding: 20px;
         margin: 16px;
@@ -1013,7 +1209,6 @@ a[data-nav-link] {
 }
 
 .home-title {
-    font-size: clamp(2.5rem, 5vw, 3.5rem);
     font-weight: 900;
     color: white;
     margin-bottom: 16px;
@@ -1021,7 +1216,6 @@ a[data-nav-link] {
 }
 
 .home-subtitle {
-    font-size: 1.1rem;
     line-height: 1.8;
     color: #d1d5db;
 }
@@ -1084,7 +1278,6 @@ a[data-nav-link] {
 
 .home-section-title {
     color: white;
-    font-size: 1.5rem;
     letter-spacing: 0.1em;
     margin-bottom: 24px;
 }
@@ -1157,7 +1350,6 @@ a[data-nav-link] {
 }
 
 .home-card-title {
-    font-size: 1.25rem;
     color: white;
     margin-bottom: 12px;
 }
@@ -1196,10 +1388,6 @@ a[data-nav-link] {
         margin: 0 auto 32px;
     }
 
-    .home-title {
-        font-size: 2.5rem;
-    }
-
     .home-countdown-strip {
         flex-direction: column;
         align-items: stretch;
@@ -1213,10 +1401,6 @@ a[data-nav-link] {
 }
 
 @media (max-width: 480px) {
-    .home-title {
-        font-size: 2rem;
-    }
-
     .home-countdown-strip {
         padding: 12px 16px;
     }

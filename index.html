@@ -11,7 +11,7 @@
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body class="text-base md:text-lg">
 <div class="flex h-auto min-h-screen w-full flex-col bg-[#1a1a1a] dark group/design-root" style='font-family: "Space Grotesk", "Noto Sans", sans-serif;'>
 <div class="layout-container flex h-full grow flex-col">
     <!-- Admin Bar (hidden by default) -->
@@ -34,24 +34,24 @@
                 <span class="material-symbols-outlined text-[#f26c0d] text-3xl">
                     sports_football
                 </span>
-                <h2 class="madden-pixelated text-2xl font-bold tracking-wider">Turkey Bowl <span class="site-title-suffix">25</span></h2>
+                <h2 class="madden-pixelated text-2xl md:text-4xl font-bold tracking-wider">Turkey Bowl <span class="site-title-suffix">25</span></h2>
             </div>
 
             <nav class="desktop-nav flex-1 items-center justify-center gap-8" data-nav-desktop>
-                <a href="#home" data-nav-link class="madden-pixelated-sm text-sm font-medium tracking-[0.1em] text-white transition-colors duration-200 hover:text-[#f26c0d]">Home</a>
-                <a href="#roster" data-nav-link class="madden-pixelated-sm text-sm font-medium tracking-[0.1em] text-white transition-colors duration-200 hover:text-[#f26c0d]">Roster</a>
-                <a href="#history" data-nav-link class="madden-pixelated-sm text-sm font-medium tracking-[0.1em] text-white transition-colors duration-200 hover:text-[#f26c0d]">Hall of Fame</a>
-                <a href="#teams" data-nav-link class="madden-pixelated-sm text-sm font-medium tracking-[0.1em] text-white transition-colors duration-200 hover:text-[#f26c0d]">Teams</a>
+                <a href="#home" data-nav-link class="madden-pixelated-sm text-sm md:text-base font-medium tracking-[0.1em] text-white transition-colors duration-200 hover:text-[#f26c0d]">Home</a>
+                <a href="#roster" data-nav-link class="madden-pixelated-sm text-sm md:text-base font-medium tracking-[0.1em] text-white transition-colors duration-200 hover:text-[#f26c0d]">Roster</a>
+                <a href="#history" data-nav-link class="madden-pixelated-sm text-sm md:text-base font-medium tracking-[0.1em] text-white transition-colors duration-200 hover:text-[#f26c0d]">Hall of Fame</a>
+                <a href="#teams" data-nav-link class="madden-pixelated-sm text-sm md:text-base font-medium tracking-[0.1em] text-white transition-colors duration-200 hover:text-[#f26c0d]">Teams</a>
             </nav>
 
             <div class="desktop-nav-utilities flex-shrink-0 items-center gap-4">
-                <button type="button" class="flex h-10 max-w-[480px] items-center justify-center gap-2 overflow-hidden rounded-md bg-white/10 px-3 text-sm font-bold leading-normal tracking-[0.015em] text-white transition-colors hover:bg-white/20">
+                <button type="button" class="flex h-10 max-w-[480px] items-center justify-center gap-2 overflow-hidden rounded-md bg-white/10 px-3 text-sm md:text-base font-bold leading-normal tracking-[0.015em] text-white transition-colors hover:bg-white/20">
                     <span class="material-symbols-outlined text-xl">settings</span>
                 </button>
             </div>
 
             <div class="flex items-center gap-3 md:hidden">
-                <button type="button" class="flex h-10 items-center justify-center gap-2 overflow-hidden rounded-md bg-white/10 px-3 text-sm font-bold leading-normal tracking-[0.015em] text-white transition-colors hover:bg-white/20">
+                <button type="button" class="flex h-10 items-center justify-center gap-2 overflow-hidden rounded-md bg-white/10 px-3 text-sm md:text-base font-bold leading-normal tracking-[0.015em] text-white transition-colors hover:bg-white/20">
                     <span class="material-symbols-outlined text-xl">settings</span>
                 </button>
                 <button type="button" class="inline-flex h-10 w-10 items-center justify-center rounded-md border border-white/20 text-white transition-colors duration-200 hover:border-[#f26c0d] hover:text-[#f26c0d]" aria-label="Open navigation" aria-expanded="false" data-mobile-nav-toggle>
@@ -62,19 +62,19 @@
 
         <div class="hidden border-t border-white/10 bg-[#1a1a1a] md:hidden" data-mobile-nav-panel>
             <nav class="flex flex-col gap-2 px-4 pb-4 pt-2 sm:px-6">
-                <a href="#home" data-nav-link class="madden-pixelated-sm flex w-full items-center justify-between rounded-md px-2 py-2 text-sm font-medium tracking-[0.1em] text-white transition-colors duration-200 hover:text-[#f26c0d]">
+                <a href="#home" data-nav-link class="madden-pixelated-sm flex w-full items-center justify-between rounded-md px-2 py-2 text-sm md:text-base font-medium tracking-[0.1em] text-white transition-colors duration-200 hover:text-[#f26c0d]">
                     Home
                     <span class="material-symbols-outlined text-base">arrow_forward_ios</span>
                 </a>
-                <a href="#roster" data-nav-link class="madden-pixelated-sm flex w-full items-center justify-between rounded-md px-2 py-2 text-sm font-medium tracking-[0.1em] text-white transition-colors duration-200 hover:text-[#f26c0d]">
+                <a href="#roster" data-nav-link class="madden-pixelated-sm flex w-full items-center justify-between rounded-md px-2 py-2 text-sm md:text-base font-medium tracking-[0.1em] text-white transition-colors duration-200 hover:text-[#f26c0d]">
                     Roster
                     <span class="material-symbols-outlined text-base">arrow_forward_ios</span>
                 </a>
-                <a href="#history" data-nav-link class="madden-pixelated-sm flex w-full items-center justify-between rounded-md px-2 py-2 text-sm font-medium tracking-[0.1em] text-white transition-colors duration-200 hover:text-[#f26c0d]">
+                <a href="#history" data-nav-link class="madden-pixelated-sm flex w-full items-center justify-between rounded-md px-2 py-2 text-sm md:text-base font-medium tracking-[0.1em] text-white transition-colors duration-200 hover:text-[#f26c0d]">
                     Hall of Fame
                     <span class="material-symbols-outlined text-base">arrow_forward_ios</span>
                 </a>
-                <a href="#teams" data-nav-link class="madden-pixelated-sm flex w-full items-center justify-between rounded-md px-2 py-2 text-sm font-medium tracking-[0.1em] text-white transition-colors duration-200 hover:text-[#f26c0d]">
+                <a href="#teams" data-nav-link class="madden-pixelated-sm flex w-full items-center justify-between rounded-md px-2 py-2 text-sm md:text-base font-medium tracking-[0.1em] text-white transition-colors duration-200 hover:text-[#f26c0d]">
                     Teams
                     <span class="material-symbols-outlined text-base">arrow_forward_ios</span>
                 </a>
@@ -87,8 +87,8 @@
         <!-- Home Section -->
         <section id="home" class="page-section">
             <div class="home-intro">
-                <h1 id="home-title" class="home-title madden-pixelated">Turkey Bowl Championship '25</h1>
-                <p class="home-subtitle">Join us for the annual Turkey Bowl, a Thanksgiving tradition of football, friendship, and fun. This year's event promises to be the best yet, with exciting matchups, delicious food, and unforgettable memories.</p>
+                <h1 id="home-title" class="home-title madden-pixelated text-2xl md:text-4xl">Turkey Bowl Championship '25</h1>
+                <p class="home-subtitle text-base md:text-lg">Join us for the annual Turkey Bowl, a Thanksgiving tradition of football, friendship, and fun. This year's event promises to be the best yet, with exciting matchups, delicious food, and unforgettable memories.</p>
             </div>
 
             <div class="home-countdown-strip" aria-label="Countdown to kickoff">
@@ -114,7 +114,7 @@
             </div>
 
             <div class="home-event-card">
-                <h2 class="home-section-title madden-pixelated-sm">Event Details</h2>
+                <h2 class="home-section-title madden-pixelated-sm text-2xl md:text-4xl">Event Details</h2>
                 <div class="home-event-grid">
                     <div class="event-detail">
                         <span class="event-detail-label">Date</span>
@@ -136,7 +136,7 @@
             </div>
 
             <div class="home-section">
-                <h2 class="home-section-title madden-pixelated-sm">Highlights</h2>
+                <h2 class="home-section-title madden-pixelated-sm text-2xl md:text-4xl">Highlights</h2>
                 <div class="home-card-grid">
                     <article class="home-card">
                         <div class="home-card-image placeholder-football" role="presentation"><span aria-hidden="true">🏈</span></div>
@@ -163,7 +163,7 @@
             </div>
 
             <div class="home-section">
-                <h2 class="home-section-title madden-pixelated-sm">Past Champions</h2>
+                <h2 class="home-section-title madden-pixelated-sm text-2xl md:text-4xl">Past Champions</h2>
                 <div id="past-champions" class="home-card-grid">
                     <!-- Past champion cards will be injected here -->
                 </div>
@@ -171,41 +171,41 @@
         </section>
         <!-- Roster Section -->
         <section id="roster" class="page-section">
-            <div class="flex flex-wrap justify-between items-center gap-4 p-4">
-                <h1 class="madden-pixelated text-white text-4xl font-bold">Player Roster</h1>
+            <div class="roster-header">
+                <h1 class="roster-title madden-pixelated text-2xl md:text-4xl">Player Roster</h1>
                 <button id="add-player" class="admin-only add-btn">Add Player</button>
             </div>
-            <div class="py-3">
-                <div class="relative">
-                    <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-white/50">
+            <div class="roster-search">
+                <div class="roster-search-field">
+                    <span class="material-symbols-outlined roster-search-icon">
                         search
                     </span>
-                    <input id="player-search" class="form-input w-full min-w-0 resize-none overflow-hidden rounded-md text-white focus:outline-none focus:ring-2 focus:ring-[#f26c0d] border border-white/20 bg-black/30 h-12 placeholder:text-white/50 pl-12 pr-4 text-base font-normal" placeholder="Search Players (e.g. 'QB', 'Pilgrims')" value=""/>
+                    <input id="player-search" class="roster-search-input" placeholder="Search Players (e.g. 'QB', 'Pilgrims')" value=""/>
                 </div>
             </div>
-            <div class="py-3">
-                <div class="overflow-hidden rounded-lg border border-white/20 bg-black/30 shadow-lg">
-                    <table class="w-full">
-                        <thead class="bg-white/5">
+            <div class="roster-table-container">
+                <div class="roster-table-wrapper">
+                    <table class="roster-table">
+                        <thead>
                             <tr>
-                                <th class="table-cell-style w-2/5">Player</th>
-                                <th class="table-cell-style w-1/5">Position</th>
-                                <th class="table-cell-style w-1/5">Team</th>
-                                <th class="table-cell-style w-1/5">Experience</th>
+                                <th class="table-cell-style roster-col-player">Player</th>
+                                <th class="table-cell-style roster-col-position">Position</th>
+                                <th class="table-cell-style roster-col-team">Team</th>
+                                <th class="table-cell-style roster-col-experience">Experience</th>
                                 <th class="table-cell-style admin-only">Actions</th>
                             </tr>
                         </thead>
-                        <tbody id="players-table-body" class="divide-y divide-white/10">
+                        <tbody id="players-table-body" class="roster-table-body">
                             <!-- Players will be dynamically loaded here -->
                         </tbody>
                     </table>
                 </div>
             </div>
-            <div class="flex items-center justify-center p-4 mt-4">
+            <div class="roster-pagination">
                 <button class="pagination-arrow" onclick="changePage(-1)">
                     <span class="material-symbols-outlined">chevron_left</span>
                 </button>
-                <div id="pagination-numbers" class="flex">
+                <div id="pagination-numbers" class="roster-pagination-numbers">
                     <!-- Pagination numbers will be dynamically generated -->
                 </div>
                 <button class="pagination-arrow" onclick="changePage(1)">
@@ -216,13 +216,13 @@
 
         <!-- Teams Section -->
         <section id="teams" class="page-section">
-            <div class="flex flex-wrap justify-between items-center gap-4 p-4">
-                <h1 class="madden-pixelated text-white text-4xl font-bold">Teams</h1>
+            <div class="teams-header">
+                <h1 class="teams-title madden-pixelated text-2xl md:text-4xl">Teams</h1>
                 <button id="add-team" class="admin-only add-btn">Add Team</button>
             </div>
-            <div class="py-3">
-                <div class="overflow-hidden rounded-lg border border-white/20 bg-black/30 shadow-lg">
-                    <div id="teams-container" class="divide-y divide-white/10">
+            <div class="teams-wrapper">
+                <div class="teams-card-list">
+                    <div id="teams-container" class="teams-container">
                         <!-- Teams will be dynamically loaded here -->
                     </div>
                 </div>
@@ -231,27 +231,27 @@
 
         <!-- History/Hall of Fame Section -->
         <section id="history" class="page-section">
-            <div class="flex flex-wrap justify-between items-center gap-4 p-4">
-                <h1 class="madden-pixelated text-white text-4xl font-bold">Hall of Fame</h1>
+            <div class="history-header">
+                <h1 class="history-title madden-pixelated text-2xl md:text-4xl">Hall of Fame</h1>
             </div>
 
-            <div class="hof-grid gap-4">
+            <div class="hof-grid">
                 <div class="hof-section">
                     <div class="hof-header">
-                        <h2>Championships</h2>
+                        <h2 class="text-xl md:text-2xl">Championships</h2>
                         <button id="add-championship" class="admin-only add-btn">Add Championship</button>
                     </div>
-                    <div class="hof-table-wrapper py-3">
-                        <table class="w-full">
-                            <thead class="bg-white/5">
+                    <div class="hof-table-wrapper">
+                        <table>
+                            <thead>
                                 <tr>
-                                    <th class="table-cell-style w-1/5">Year</th>
-                                    <th class="table-cell-style w-2/5">Champion</th>
-                                    <th class="table-cell-style w-2/5">Score</th>
+                                    <th class="table-cell-style hof-col-year">Year</th>
+                                    <th class="table-cell-style hof-col-primary">Champion</th>
+                                    <th class="table-cell-style hof-col-secondary">Score</th>
                                     <th class="table-cell-style admin-only">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody id="hof-championships-body" class="divide-y divide-white/10">
+                            <tbody id="hof-championships-body">
                                 <!-- Championships -->
                             </tbody>
                         </table>
@@ -259,20 +259,20 @@
                 </div>
                 <div class="hof-section">
                     <div class="hof-header">
-                        <h2>Most Valuable Player</h2>
+                        <h2 class="text-xl md:text-2xl">Most Valuable Player</h2>
                         <button id="add-mvp-award" class="admin-only add-btn">Add MVP</button>
                     </div>
                     <div class="hof-table-wrapper">
-                        <table class="w-full">
-                            <thead class="bg-white/5">
+                        <table>
+                            <thead>
                                 <tr>
-                                    <th class="table-cell-style w-1/5">Year</th>
-                                    <th class="table-cell-style w-2/5">Player</th>
-                                    <th class="table-cell-style w-2/5">Team</th>
+                                    <th class="table-cell-style hof-col-year">Year</th>
+                                    <th class="table-cell-style hof-col-primary">Player</th>
+                                    <th class="table-cell-style hof-col-secondary">Team</th>
                                     <th class="table-cell-style admin-only">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody id="hof-mvp-body" class="divide-y divide-white/10">
+                            <tbody id="hof-mvp-body">
                                 <!-- MVP entries -->
                             </tbody>
                         </table>
@@ -281,20 +281,20 @@
 
                 <div class="hof-section">
                     <div class="hof-header">
-                        <h2>Offensive Player of the Year</h2>
+                        <h2 class="text-xl md:text-2xl">Offensive Player of the Year</h2>
                         <button id="add-offensive-award" class="admin-only add-btn">Add Offensive Winner</button>
                     </div>
                     <div class="hof-table-wrapper">
-                        <table class="w-full">
-                            <thead class="bg-white/5">
+                        <table>
+                            <thead>
                                 <tr>
-                                    <th class="table-cell-style w-1/5">Year</th>
-                                    <th class="table-cell-style w-2/5">Player</th>
-                                    <th class="table-cell-style w-2/5">Team</th>
+                                    <th class="table-cell-style hof-col-year">Year</th>
+                                    <th class="table-cell-style hof-col-primary">Player</th>
+                                    <th class="table-cell-style hof-col-secondary">Team</th>
                                     <th class="table-cell-style admin-only">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody id="hof-offensive-body" class="divide-y divide-white/10">
+                            <tbody id="hof-offensive-body">
                                 <!-- Offensive winners -->
                             </tbody>
                         </table>
@@ -303,20 +303,20 @@
 
                 <div class="hof-section">
                     <div class="hof-header">
-                        <h2>Defensive Player of the Year</h2>
+                        <h2 class="text-xl md:text-2xl">Defensive Player of the Year</h2>
                         <button id="add-defensive-award" class="admin-only add-btn">Add Defensive Winner</button>
                     </div>
                     <div class="hof-table-wrapper">
-                        <table class="w-full">
-                            <thead class="bg-white/5">
+                        <table>
+                            <thead>
                                 <tr>
-                                    <th class="table-cell-style w-1/5">Year</th>
-                                    <th class="table-cell-style w-2/5">Player</th>
-                                    <th class="table-cell-style w-2/5">Team</th>
+                                    <th class="table-cell-style hof-col-year">Year</th>
+                                    <th class="table-cell-style hof-col-primary">Player</th>
+                                    <th class="table-cell-style hof-col-secondary">Team</th>
                                     <th class="table-cell-style admin-only">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody id="hof-defensive-body" class="divide-y divide-white/10">
+                            <tbody id="hof-defensive-body">
                                 <!-- Defensive winners -->
                             </tbody>
                         </table>

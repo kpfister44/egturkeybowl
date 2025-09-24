@@ -245,7 +245,7 @@ function renderHomePage() {
 
         if (championships.length === 0) {
             const emptyMessage = document.createElement('p');
-            emptyMessage.className = 'home-card-text';
+            emptyMessage.className = 'home-card-text text-base md:text-lg';
             emptyMessage.textContent = 'Past champions will appear here once records are added.';
             championsContainer.appendChild(emptyMessage);
         } else {
@@ -257,8 +257,8 @@ function renderHomePage() {
                 card.innerHTML = `
                     <div class="home-card-image placeholder-trophy" role="presentation"><span aria-hidden="true">🏆</span></div>
                     <div class="home-card-body">
-                        <h3 class="home-card-title">${championship.year}: ${championship.teamName}</h3>
-                        <p class="home-card-text">${scoreText}</p>
+                        <h3 class="home-card-title text-xl md:text-2xl">${championship.year}: ${championship.teamName}</h3>
+                        <p class="home-card-text text-base md:text-lg">${scoreText}</p>
                     </div>
                 `;
 
@@ -368,7 +368,7 @@ function renderPlayersTable() {
 
 function createPlayerTableRow(player) {
     const row = document.createElement('tr');
-    row.className = 'hover:bg-white/5 transition-colors';
+    row.className = 'table-row-interactive';
     row.dataset.playerId = player.id;
 
     // Find team name
@@ -376,14 +376,14 @@ function createPlayerTableRow(player) {
     const teamName = playerTeam ? playerTeam.name : 'Free Agent';
 
     row.innerHTML = `
-        <td class="table-player-cell-style">${player.name}</td>
-        <td class="table-data-cell-style">${player.position}</td>
-        <td class="table-data-cell-style">${teamName}</td>
-        <td class="table-data-cell-style">${player.yearsPlayed} year${player.yearsPlayed !== 1 ? 's' : ''}</td>
+        <td class="table-player-cell-style text-base md:text-lg">${player.name}</td>
+        <td class="table-data-cell-style text-base md:text-lg">${player.position}</td>
+        <td class="table-data-cell-style text-base md:text-lg">${teamName}</td>
+        <td class="table-data-cell-style text-base md:text-lg">${player.yearsPlayed} year${player.yearsPlayed !== 1 ? 's' : ''}</td>
         ${isAdminMode ? `
-        <td class="table-data-cell-style">
-            <button class="edit-player-btn admin-btn mr-2">Edit</button>
-            <button class="delete-player-btn admin-btn">Delete</button>
+        <td class="table-data-cell-style text-base md:text-lg">
+            <button class="edit-player-btn admin-btn admin-btn-spacer text-sm md:text-base">Edit</button>
+            <button class="delete-player-btn admin-btn text-sm md:text-base">Delete</button>
         </td>
         ` : ''}
     `;
@@ -446,7 +446,7 @@ function renderPagination() {
     // Generate page numbers
     for (let i = 1; i <= totalPages; i++) {
         const pageBtn = document.createElement('button');
-        pageBtn.className = `pagination-number ${i === rosterCurrentPage ? 'active' : ''}`;
+        pageBtn.className = `pagination-number text-sm md:text-base ${i === rosterCurrentPage ? 'active' : ''}`;
         pageBtn.textContent = i;
         pageBtn.addEventListener('click', () => {
             rosterCurrentPage = i;
@@ -480,14 +480,14 @@ function createPlayerCard(player) {
         <div class="player-photo" style="background-image: url('${player.photoPath}')">
             ${player.name.split(' ').map(n => n[0]).join('')}
         </div>
-        <div class="player-name" ${isAdminMode ? 'contenteditable="true"' : ''}>${player.name}</div>
+        <div class="player-name text-xl md:text-2xl" ${isAdminMode ? 'contenteditable="true"' : ''}>${player.name}</div>
         ${isAdminMode ? `
-        <select class="player-position-select" style="background: none; border: none; color: #9ca3af; font-size: 0.875rem; margin-bottom: 8px;">
+        <select class="player-position-select text-sm md:text-base" style="background: none; border: none; color: #9ca3af; margin-bottom: 8px;">
             ${positions.map(pos => `<option value="${pos}" ${pos === player.position ? 'selected' : ''}>${pos}</option>`).join('')}
         </select>
-        ` : `<div class="player-position">${player.position}</div>`}
-        <div class="player-experience">${player.yearsPlayed} year${player.yearsPlayed !== 1 ? 's' : ''} experience</div>
-        ${isAdminMode ? '<button class="delete-player-btn admin-btn" style="margin-top: 10px;">Delete</button>' : ''}
+        ` : `<div class="player-position text-sm md:text-base">${player.position}</div>`}
+        <div class="player-experience text-base md:text-lg">${player.yearsPlayed} year${player.yearsPlayed !== 1 ? 's' : ''} experience</div>
+        ${isAdminMode ? '<button class="delete-player-btn admin-btn text-sm md:text-base" style="margin-top: 10px;">Delete</button>' : ''}
     `;
 
     if (isAdminMode) {
@@ -544,15 +544,15 @@ function createPlayerListItem(player) {
             ${player.name.split(' ').map(n => n[0]).join('')}
         </div>
         <div class="player-list-info">
-            <div class="player-list-name">${player.name}</div>
-            <div class="player-list-nickname">"${player.nickname}"</div>
+            <div class="player-list-name text-base md:text-lg">${player.name}</div>
+            <div class="player-list-nickname text-sm md:text-base">"${player.nickname}"</div>
         </div>
-        <div class="player-list-position">${player.position}</div>
-        <div class="player-list-years">${player.yearsPlayed}yr${player.yearsPlayed > 1 ? 's' : ''}</div>
+        <div class="player-list-position text-sm md:text-base">${player.position}</div>
+        <div class="player-list-years text-sm md:text-base">${player.yearsPlayed}yr${player.yearsPlayed > 1 ? 's' : ''}</div>
         ${isAdminMode ? `
         <div class="player-list-admin-controls">
-            <button class="edit-player-btn admin-btn">Edit</button>
-            <button class="delete-player-btn admin-btn">Delete</button>
+            <button class="edit-player-btn admin-btn text-sm md:text-base">Edit</button>
+            <button class="delete-player-btn admin-btn text-sm md:text-base">Delete</button>
         </div>
         ` : ''}
     `;
@@ -646,44 +646,44 @@ function createPlayerCardForModal(player, editMode = false) {
             </div>
             <div class="player-detail-summary">
                 ${editMode ? `
-                    <input class="player-detail-input player-detail-name-input" value="${displayName}" />
-                ` : `<h2 class="player-detail-name">${displayName}</h2>`}
+                    <input class="player-detail-input player-detail-name-input text-2xl md:text-4xl" value="${displayName}" />
+                ` : `<h2 class="player-detail-name text-2xl md:text-4xl">${displayName}</h2>`}
                 ${editMode ? `
-                    <input class="player-detail-input player-detail-nickname-input" placeholder="Nickname" value="${player.nickname || ''}" />
-                ` : `<div class="player-detail-role">${player.nickname ? player.nickname : player.position}</div>`}
-                <div class="player-detail-section-title">Biography</div>
+                    <input class="player-detail-input player-detail-nickname-input text-base md:text-lg" placeholder="Nickname" value="${player.nickname || ''}" />
+                ` : `<div class="player-detail-role text-sm md:text-base">${player.nickname ? player.nickname : player.position}</div>`}
+                <div class="player-detail-section-title text-xs md:text-sm">Biography</div>
                 ${editMode ? `
-                    <textarea class="player-detail-textarea">${bioText}</textarea>
-                ` : `<p class="player-detail-bio">${bioText}</p>`}
+                    <textarea class="player-detail-textarea text-base md:text-lg">${bioText}</textarea>
+                ` : `<p class="player-detail-bio text-base md:text-lg">${bioText}</p>`}
             </div>
         </div>
         <div class="player-detail-info">
-            <div class="player-detail-info-title">Player Info</div>
+            <div class="player-detail-info-title text-base md:text-lg">Player Info</div>
             <div class="player-detail-info-grid">
                 <div class="player-detail-info-item">
-                    <span class="info-label">Position</span>
+                    <span class="info-label text-xs md:text-sm">Position</span>
                     ${editMode ? `
-                        <select class="player-detail-select">
+                        <select class="player-detail-select text-base md:text-lg">
                             ${['QB','RB','WR','TE','OL','DL','LB','CB','S','K'].map(pos => `<option value="${pos}" ${pos === player.position ? 'selected' : ''}>${pos}</option>`).join('')}
                         </select>
-                    ` : `<span class="info-value">${player.position}</span>`}
+                    ` : `<span class="info-value text-base md:text-lg">${player.position}</span>`}
                 </div>
                 <div class="player-detail-info-item">
-                    <span class="info-label">Experience</span>
+                    <span class="info-label text-xs md:text-sm">Experience</span>
                     ${editMode ? `
-                        <input type="number" min="0" class="player-detail-input player-detail-years" value="${player.yearsPlayed}" />
-                    ` : `<span class="info-value">${player.yearsPlayed} year${player.yearsPlayed !== 1 ? 's' : ''}</span>`}
+                        <input type="number" min="0" class="player-detail-input player-detail-years text-base md:text-lg" value="${player.yearsPlayed}" />
+                    ` : `<span class="info-value text-base md:text-lg">${player.yearsPlayed} year${player.yearsPlayed !== 1 ? 's' : ''}</span>`}
                 </div>
                 <div class="player-detail-info-item">
-                    <span class="info-label">Team</span>
-                    <span class="info-value">${teamName}</span>
+                    <span class="info-label text-xs md:text-sm">Team</span>
+                    <span class="info-value text-base md:text-lg">${teamName}</span>
                 </div>
             </div>
         </div>
         ${editMode ? `
         <div class="player-detail-actions">
-            <button class="btn btn-secondary player-detail-cancel">Cancel</button>
-            <button class="btn btn-primary player-detail-save">Save Player</button>
+            <button class="btn btn-secondary player-detail-cancel text-sm md:text-base">Cancel</button>
+            <button class="btn btn-primary player-detail-save text-sm md:text-base">Save Player</button>
         </div>
         ` : ''}
     `;
@@ -810,52 +810,52 @@ function renderTeamsPage() {
 // Create team card element
 function createTeamCard(team) {
     const card = document.createElement('div');
-    card.className = 'team-card-style group';
+    card.className = 'team-card-style';
     card.dataset.teamId = team.id;
 
     const captain = currentData.players.find(p => p.id === team.captainId);
 
     // Get team initial and color based on team name
     const teamColors = {
-        'The Turkeys': { initial: 'T', color: 'bg-orange-600' },
-        'The Gobblers': { initial: 'G', color: 'bg-amber-800' },
-        'The Pilgrims': { initial: 'P', color: 'bg-orange-600' },
-        'The Cranberries': { initial: 'C', color: 'bg-red-700' },
-        'The Stuffings': { initial: 'S', color: 'bg-yellow-600' },
-        'The Gravy Boats': { initial: 'G', color: 'bg-amber-800' }
+        'The Turkeys': { initial: 'T', colorClass: 'team-logo-color-turkey' },
+        'The Gobblers': { initial: 'G', colorClass: 'team-logo-color-gobbler' },
+        'The Pilgrims': { initial: 'P', colorClass: 'team-logo-color-pilgrim' },
+        'The Cranberries': { initial: 'C', colorClass: 'team-logo-color-cranberry' },
+        'The Stuffings': { initial: 'S', colorClass: 'team-logo-color-stuffing' },
+        'The Gravy Boats': { initial: 'G', colorClass: 'team-logo-color-gravy' }
     };
 
-    const teamInfo = teamColors[team.name] || { initial: team.name.charAt(0).toUpperCase(), color: 'bg-gray-600' };
+    const teamInfo = teamColors[team.name] || { initial: team.name.charAt(0).toUpperCase(), colorClass: 'team-logo-color-default' };
     const record = team.record || { w: 0, l: 0, t: 0 };
 
     const header = document.createElement('div');
     header.className = 'team-card-header';
     header.innerHTML = `
         <div class="team-info-block">
-            <div class="team-logo-style ${teamInfo.color}">${teamInfo.initial}</div>
+            <div class="team-logo-style ${teamInfo.colorClass}">${teamInfo.initial}</div>
             <div>
-                <h3 class="team-name-style" ${isAdminMode ? 'contenteditable="true" data-team-field="name"' : ''}>${team.name}</h3>
-                <p class="team-captain-style">Captain: ${captain ? captain.name : 'TBD'}</p>
+                <h3 class="team-name-style text-xl md:text-2xl" ${isAdminMode ? 'contenteditable="true" data-team-field="name"' : ''}>${team.name}</h3>
+                <p class="team-captain-style text-base md:text-lg">Captain: ${captain ? captain.name : 'TBD'}</p>
             </div>
         </div>
         <div class="team-stats-style">
             <div class="stat-item-style">
-                <span class="stat-label-style">W</span>
-                <span class="stat-value-style" ${isAdminMode ? 'contenteditable="true" data-record-field="w"' : ''}>${record.w ?? 0}</span>
+                <span class="stat-label-style text-sm md:text-base">W</span>
+                <span class="stat-value-style text-base md:text-lg" ${isAdminMode ? 'contenteditable="true" data-record-field="w"' : ''}>${record.w ?? 0}</span>
             </div>
             <div class="stat-item-style">
-                <span class="stat-label-style">L</span>
-                <span class="stat-value-style" ${isAdminMode ? 'contenteditable="true" data-record-field="l"' : ''}>${record.l ?? 0}</span>
+                <span class="stat-label-style text-sm md:text-base">L</span>
+                <span class="stat-value-style text-base md:text-lg" ${isAdminMode ? 'contenteditable="true" data-record-field="l"' : ''}>${record.l ?? 0}</span>
             </div>
             <div class="stat-item-style">
-                <span class="stat-label-style">T</span>
-                <span class="stat-value-style" ${isAdminMode ? 'contenteditable="true" data-record-field="t"' : ''}>${record.t ?? 0}</span>
+                <span class="stat-label-style text-sm md:text-base">T</span>
+                <span class="stat-value-style text-base md:text-lg" ${isAdminMode ? 'contenteditable="true" data-record-field="t"' : ''}>${record.t ?? 0}</span>
             </div>
         </div>
         ${isAdminMode ? `
         <div class="admin-controls" style="display: flex; gap: 8px;">
-            <button class="edit-roster-btn admin-btn">Manage Roster</button>
-            <button class="delete-team-btn admin-btn">Delete</button>
+            <button class="edit-roster-btn admin-btn text-sm md:text-base">Manage Roster</button>
+            <button class="delete-team-btn admin-btn text-sm md:text-base">Delete</button>
         </div>
         ` : ''}
     `;
@@ -899,20 +899,20 @@ function renderTeamRosterTable(team, container) {
     container.innerHTML = '';
 
     const wrapper = document.createElement('div');
-    wrapper.className = 'overflow-hidden rounded-lg border border-white/20 bg-black/30 shadow-lg';
+    wrapper.className = 'team-roster-table-wrapper';
 
     const table = document.createElement('table');
-    table.className = 'w-full';
+    table.className = 'team-roster-table';
     table.innerHTML = `
-        <thead class="bg-white/5">
+        <thead>
             <tr>
-                <th class="table-cell-style w-2/5">Player</th>
-                <th class="table-cell-style w-1/5">Position</th>
-                <th class="table-cell-style w-1/5">Team</th>
-                <th class="table-cell-style w-1/5">Experience</th>
+                <th class="table-cell-style team-roster-col-player text-sm md:text-base">Player</th>
+                <th class="table-cell-style team-roster-col-position text-sm md:text-base">Position</th>
+                <th class="table-cell-style team-roster-col-team text-sm md:text-base">Team</th>
+                <th class="table-cell-style team-roster-col-experience text-sm md:text-base">Experience</th>
             </tr>
         </thead>
-        <tbody class="divide-y divide-white/10"></tbody>
+        <tbody></tbody>
     `;
 
     const tbody = table.querySelector('tbody');
@@ -922,7 +922,7 @@ function renderTeamRosterTable(team, container) {
 
     if (players.length === 0) {
         const emptyRow = document.createElement('tr');
-        emptyRow.innerHTML = `<td class="table-data-cell-style text-center" colspan="4">No players assigned yet.</td>`;
+        emptyRow.innerHTML = `<td class="table-data-cell-style text-center text-base md:text-lg" colspan="4">No players assigned yet.</td>`;
         tbody.appendChild(emptyRow);
     } else {
         players.forEach(player => {
@@ -930,12 +930,12 @@ function renderTeamRosterTable(team, container) {
             const teamName = playerTeam ? playerTeam.name : 'Free Agent';
 
             const row = document.createElement('tr');
-            row.className = 'hover:bg-white/5 transition-colors';
+            row.className = 'table-row-interactive';
             row.innerHTML = `
-                <td class="table-player-cell-style">${player.name}</td>
-                <td class="table-data-cell-style">${player.position}</td>
-                <td class="table-data-cell-style">${teamName}</td>
-                <td class="table-data-cell-style">${player.yearsPlayed} year${player.yearsPlayed !== 1 ? 's' : ''}</td>
+                <td class="table-player-cell-style text-base md:text-lg">${player.name}</td>
+                <td class="table-data-cell-style text-base md:text-lg">${player.position}</td>
+                <td class="table-data-cell-style text-base md:text-lg">${teamName}</td>
+                <td class="table-data-cell-style text-base md:text-lg">${player.yearsPlayed} year${player.yearsPlayed !== 1 ? 's' : ''}</td>
             `;
             tbody.appendChild(row);
         });
@@ -1022,9 +1022,9 @@ const HALL_OF_FAME_TABLES = [
         awardName: 'Most Valuable Player',
         bodyId: 'hof-mvp-body',
         columns: [
-            { field: 'year', className: 'table-data-cell-style', type: 'number' },
-            { field: 'playerName', className: 'table-player-cell-style' },
-            { field: 'teamName', className: 'table-data-cell-style', placeholder: '—' }
+            { field: 'year', className: 'table-data-cell-style hof-col-year text-base md:text-lg', type: 'number' },
+            { field: 'playerName', className: 'table-player-cell-style hof-col-primary text-base md:text-lg' },
+            { field: 'teamName', className: 'table-data-cell-style hof-col-secondary text-base md:text-lg', placeholder: '—' }
         ]
     },
     {
@@ -1033,9 +1033,9 @@ const HALL_OF_FAME_TABLES = [
         awardName: 'Offensive Player of the Year',
         bodyId: 'hof-offensive-body',
         columns: [
-            { field: 'year', className: 'table-data-cell-style', type: 'number' },
-            { field: 'playerName', className: 'table-player-cell-style' },
-            { field: 'teamName', className: 'table-data-cell-style', placeholder: '—' }
+            { field: 'year', className: 'table-data-cell-style hof-col-year text-base md:text-lg', type: 'number' },
+            { field: 'playerName', className: 'table-player-cell-style hof-col-primary text-base md:text-lg' },
+            { field: 'teamName', className: 'table-data-cell-style hof-col-secondary text-base md:text-lg', placeholder: '—' }
         ]
     },
     {
@@ -1044,9 +1044,9 @@ const HALL_OF_FAME_TABLES = [
         awardName: 'Defensive Player of the Year',
         bodyId: 'hof-defensive-body',
         columns: [
-            { field: 'year', className: 'table-data-cell-style', type: 'number' },
-            { field: 'playerName', className: 'table-player-cell-style' },
-            { field: 'teamName', className: 'table-data-cell-style', placeholder: '—' }
+            { field: 'year', className: 'table-data-cell-style hof-col-year text-base md:text-lg', type: 'number' },
+            { field: 'playerName', className: 'table-player-cell-style hof-col-primary text-base md:text-lg' },
+            { field: 'teamName', className: 'table-data-cell-style hof-col-secondary text-base md:text-lg', placeholder: '—' }
         ]
     },
     {
@@ -1054,9 +1054,9 @@ const HALL_OF_FAME_TABLES = [
         source: 'championships',
         bodyId: 'hof-championships-body',
         columns: [
-            { field: 'year', className: 'table-data-cell-style', type: 'number' },
-            { field: 'teamName', className: 'table-player-cell-style' },
-            { field: 'score', className: 'table-data-cell-style', placeholder: '—' }
+            { field: 'year', className: 'table-data-cell-style hof-col-year text-base md:text-lg', type: 'number' },
+            { field: 'teamName', className: 'table-player-cell-style hof-col-primary text-base md:text-lg' },
+            { field: 'score', className: 'table-data-cell-style hof-col-secondary text-base md:text-lg', placeholder: '—' }
         ]
     }
 ];
@@ -1085,14 +1085,14 @@ function renderHallOfFameTable(config) {
     if (entries.length === 0) {
         const emptyRow = document.createElement('tr');
         const colspan = config.columns.length + (isAdminMode ? 1 : 0);
-        emptyRow.innerHTML = `<td class="table-data-cell-style text-center" colspan="${colspan}">No entries yet.</td>`;
+        emptyRow.innerHTML = `<td class="table-data-cell-style text-center text-base md:text-lg" colspan="${colspan}">No entries yet.</td>`;
         tbody.appendChild(emptyRow);
         return;
     }
 
     entries.forEach(entry => {
         const row = document.createElement('tr');
-        row.className = 'hover:bg-white/5 transition-colors';
+        row.className = 'table-row-interactive';
         row.dataset.entryId = entry.id;
         row.dataset.entryType = config.source;
         if (config.awardName) {
@@ -1111,8 +1111,8 @@ function renderHallOfFameTable(config) {
 
         if (isAdminMode) {
             rowHtml += `
-                <td class="table-data-cell-style admin-only">
-                    <button class="delete-history-btn admin-btn">Delete</button>
+                <td class="table-data-cell-style admin-only text-base md:text-lg">
+                    <button class="delete-history-btn admin-btn text-sm md:text-base">Delete</button>
                 </td>
             `;
         }
