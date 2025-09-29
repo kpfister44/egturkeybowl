@@ -933,6 +933,18 @@ a[data-nav-link] {
     padding: 12px 0;
 }
 
+/* Make roster table horizontally scrollable on smaller screens */
+@media (max-width: 1024px) {
+    .roster-table-wrapper {
+        overflow-x: auto;
+        overflow-y: hidden;
+    }
+
+    .roster-table {
+        min-width: 600px; /* Ensure table has minimum width to show all columns properly */
+    }
+}
+
 .roster-table-wrapper table,
 .hof-table-wrapper table {
     width: 100%;

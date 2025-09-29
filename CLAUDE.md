@@ -127,6 +127,11 @@ const eventSettings = {
 
 ## Development Guidelines
 
+- **Styling Conventions**
+  - Use Tailwind utility classes exclusively for responsive font sizing. Apply `text-base md:text-lg` for body copy, `text-sm md:text-base` for navigation labels, and `text-2xl md:text-4xl` (or `text-xl md:text-2xl` for subsection headings) on page headers in both static HTML and dynamically generated markup (see `app.js`).
+  - Keep all other styling—spacing, colors, layout, effects—inside `styles.css`. If additional spacing is needed around Tailwind-managed elements, prefer extending or creating CSS classes rather than stacking more utilities.
+  - When adding new components, follow the same split: Tailwind handles only the typography scale, while structure and theming remain in the existing CSS design system.
+
 ### **File Structure**
 ```
 turkeybowl-static/
