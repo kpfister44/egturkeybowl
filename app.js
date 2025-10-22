@@ -30,8 +30,6 @@ function loadData() {
 
     // Load history
     currentData.history = loadFromStorage('history', historyData);
-
-    console.log('Data loaded:', currentData);
 }
 
 // Load from localStorage with fallback to default data
@@ -49,7 +47,6 @@ function loadFromStorage(dataType, defaultData) {
 function saveToLocalStorage(dataType, data) {
     try {
         localStorage.setItem(`turkeybowl_${dataType}`, JSON.stringify(data));
-        console.log(`${dataType} saved to localStorage`);
     } catch (error) {
         console.error(`Error saving ${dataType} to localStorage:`, error);
     }
@@ -1266,7 +1263,6 @@ function enterAdminMode() {
     document.getElementById('admin-bar').classList.remove('hidden');
     updateAdminBarOffset();
     renderAllSections();
-    console.log('Admin mode activated');
 }
 
 // Exit admin mode
@@ -1276,7 +1272,6 @@ function exitAdminMode() {
     document.getElementById('admin-bar').classList.add('hidden');
     updateAdminBarOffset();
     renderAllSections();
-    console.log('Admin mode deactivated');
 }
 
 // Export all data as JSON
@@ -1296,8 +1291,6 @@ function exportData() {
     link.href = URL.createObjectURL(dataBlob);
     link.download = `turkeybowl-data-${new Date().toISOString().split('T')[0]}.json`;
     link.click();
-
-    console.log('Data exported');
 }
 
 // Import data from JSON file
