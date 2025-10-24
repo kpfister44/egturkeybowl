@@ -172,8 +172,6 @@ function addNewPlayer() {
     closeModal();
 
     renderRosterPage();
-
-    console.log('Player added:', newPlayer);
 }
 
 // Show Add Team Modal
@@ -290,8 +288,6 @@ function addNewTeam() {
     closeModal();
 
     renderTeamsPage();
-
-    console.log('Team added:', newTeam);
 }
 
 // Show Add Championship Modal
@@ -361,8 +357,6 @@ function addNewChampionship() {
     closeModal();
 
     renderHistoryPage();
-
-    console.log('Championship added:', newChampionship);
 }
 
 // Show Add Award Modal
@@ -463,8 +457,6 @@ function addNewAward() {
     closeModal();
 
     renderHistoryPage();
-
-    console.log('Award added:', newAward);
 }
 
 // Show Add Record Modal
@@ -539,8 +531,6 @@ function addNewRecord() {
     closeModal();
 
     renderHistoryPage();
-
-    console.log('Record added:', newRecord);
 }
 
 // Show Edit Roster Modal
@@ -662,8 +652,6 @@ function updateTeamRoster(team) {
     closeModal();
 
     renderTeamsPage();
-
-    console.log('Team roster updated:', team);
 }
 
 // Setup dual-column player selection UI

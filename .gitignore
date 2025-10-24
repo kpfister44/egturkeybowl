@@ -1,0 +1,32 @@
+# Development files
+.DS_Store
+Thumbs.db
+*.log
+*.swp
+*.swo
+*~
+
+# Editor directories and files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Environment variables (if added in future)
+.env
+.env.local
+
+# Internal documentation (Claude Code)
+AGENTS.md
+CLAUDE.md
+
+# Backup files
+*.bak
+backup/
+
+# Node modules (if added in future)
+node_modules/
+
+# Build outputs (if added in future)
+dist/
+build/
